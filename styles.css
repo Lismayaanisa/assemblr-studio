@@ -144,9 +144,9 @@ h1:focus-visible { outline: none; }
   user-select: none;
   white-space: nowrap;
 }
-.logo-wordmark .sep { color: var(--text-mute); margin: 0 5px; font-weight: 500; }
+.logo-wordmark .sep { display: none; }
 .logo-wordmark { display: inline-flex; align-items: center; gap: 8px; }
-.logo-wordmark .logo-mark { width: 26px; height: 26px; border-radius: 50%; box-shadow: var(--e2); flex: none; }
+.logo-wordmark .logo-mark { width: 26px; height: 26px; border-radius: 8px; background: #fff; padding: 2px; object-fit: contain; box-shadow: var(--e2); flex: none; }
 
 .logo-wordmark { grid-area: logo; justify-self: start; }
 
@@ -2167,16 +2167,77 @@ html:not(.anim) .preview { animation: none; }
 }
 .auth .panel { background: var(--surface); }
 .auth .story {
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 40px;
   padding-bottom: 40px;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 55%, #e9f1fc 100%);
+  color: var(--text);
+  user-select: none; -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.auth .story.is-dragging { cursor: grabbing; }
+.auth .story-copy { position: relative; z-index: 2; pointer-events: none; }
+.auth h1 { color: var(--text); text-shadow: none; }
+.auth .auth-lead { color: var(--text-soft); text-shadow: none; }
+.auth .accent-word .spark { color: #e8408a; }
+
+/* Hero picture behind the sign-in message: tilts with the cursor, turns when dragged */
+.hero { position: absolute; inset: 0; z-index: 0; overflow: hidden; perspective: 900px; }
+.hero-sway { position: absolute; inset: 0; }
+.hero-stage { position: absolute; left: 0; right: 0; top: 7%; bottom: 13%; }
+.hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.hero-pins { position: absolute; inset: 0; pointer-events: none; }
+.hero-pin { position: absolute; left: 0; top: 0; will-change: transform; transition: opacity 0.25s var(--ease); }
+.hero-pin.is-hidden { opacity: 0; }
+.hero-pin-dot {
+  position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%;
+  background: #f5b301; box-shadow: 0 0 0 2px #fff, 0 2px 6px rgba(31, 41, 55, 0.35);
+}
+.hero-pin-chip {
+  position: absolute; left: 0; bottom: 8px; transform: translateX(-50%); white-space: nowrap;
+  padding: 3px 9px; border-radius: var(--radius-full, 999px);
+  background: rgba(255, 255, 255, 0.94); color: var(--text);
+  font: 600 10.5px/1.3 var(--font-display, inherit); letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(31, 41, 55, 0.18);
+}
+.hero-pin-chip::after {
+  content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 6px; background: rgba(31, 41, 55, 0.35);
+}
+.hero-pin.is-summit .hero-pin-chip { background: var(--accent, #3b6fd8); color: #fff; padding: 4px 11px; font-size: 11.5px; }
+.hero-pin.is-summit .hero-pin-dot { background: #fff; box-shadow: 0 0 0 3px var(--accent, #3b6fd8); }
+.hero-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(90% 45% at 15% 6%, rgba(77, 168, 238, 0.10), transparent 70%);
+}
+@keyframes hero-sway {
+  from { transform: rotateY(-5deg) rotateX(1.5deg); }
+  to { transform: rotateY(5deg) rotateX(-1.5deg); }
+}
+.hero-hint {
+  position: absolute; left: 50%; bottom: 22px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  width: 42px; height: 42px; padding: 0; margin-left: -21px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85); color: var(--text);
+  box-shadow: 0 4px 16px rgba(31, 41, 55, 0.14);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.hero-hint.is-gone { opacity: 0; transform: translateY(6px); }
+.hero-hint-track { display: block; width: 26px; height: 8px; }
+.hero-hint-hand svg { display: block; width: 16px; height: 16px; stroke-width: 1.6; animation: gesture-hand 2.2s cubic-bezier(.45,0,.55,1) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-sway { animation: none; }
+  .hero-hint-hand svg { animation: none; }
 }
 .auth h1 {
-  max-width: 12em;
-  font-size: 30px;
-  line-height: 1.2;
+  max-width: 16em;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 .auth-mark {
   width: 56px;
@@ -2386,14 +2447,17 @@ html:not(.anim) .preview { animation: none; }
 
 @media (max-width: 980px) {
   .auth { grid-template-columns: 1fr; min-height: 0; }
-  .auth .story { padding: 28px 24px 32px; }
-  .auth h1 { font-size: 26px; max-width: none; }
+  .auth .story { padding: 28px 24px 32px; min-height: 440px; }
+  .hero-stage { top: 6%; bottom: 14%; }
+  .auth h1 { font-size: 17px; max-width: none; }
 }
 @media (max-width: 600px) {
   .auth .auth-mark { display: none; }
+  .auth .story { min-height: 400px; }
+  .hero-hint { bottom: 14px; }
   .auth .panel { padding-inline: 0; }
   .auth .pane { padding-inline: 24px; }
-  .auth h1 { font-size: 18px; }
+  .auth h1 { font-size: 16px; }
   .auth h1 .spark { width: 12px; height: 12px; }
   .auth-lead { margin-top: 6px; font-size: 12px; line-height: 1.5; }
 }

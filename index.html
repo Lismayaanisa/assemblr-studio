@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="assets/assemblr-studio-mark.png" />
-  <link rel="stylesheet" href="styles.css?v=214" />
+  <link rel="stylesheet" href="styles.css?v=230" />
 </head>
 <body data-phase="auth">
   <div class="backdrop" aria-hidden="true">
@@ -16,7 +16,7 @@
   </div>
 
   <header class="topbar">
-    <div class="logo-wordmark" aria-label="Assemblr Studio"><img class="logo-mark" src="assets/assemblr-studio-mark.png" alt="" width="26" height="26" />ASSEMBLR<span class="sep">/</span>STUDIO</div>
+    <div class="logo-wordmark" aria-label="Assemblr Studio"><img class="logo-mark" src="assets/assemblr-studio-mark.png" alt="" width="26" height="26" />ASSEMBLR STUDIO</div>
 
     <div class="lang" id="lang">
       <button class="lang-btn" type="button" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Country and language: United States, English">
@@ -33,11 +33,17 @@
 
   <main class="shell">
     <section class="card auth" id="auth" aria-labelledby="authHeadline">
-      <aside class="story">
-        <div class="story-copy" id="authCopy">
-          <img class="auth-mark" src="assets/assemblr-studio-mark.png" alt="" width="56" height="56" />
-          <h1 id="authHeadline" tabindex="-1"></h1>
-          <p class="auth-lead" id="authLead"></p>
+      <aside class="story" id="authStory">
+        <div class="hero" id="authHero" aria-hidden="true">
+          <div class="hero-sway"><div class="hero-stage"><canvas class="hero-canvas" id="heroCanvas"></canvas><div class="hero-pins" id="heroPins"></div></div></div>
+          <div class="hero-scrim"></div>
+          <div class="hero-hint" id="heroHint">
+            <svg class="hero-hint-track" viewBox="0 0 52 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h46"/><path d="m8 4-5 4 5 4"/><path d="m44 4 5 4-5 4"/></svg>
+            <span class="hero-hint-hand" data-icon="pointer"></span>
+          </div>
+        </div>
+        <div class="story-copy sr-only" id="authCopy">
+          <h1 id="authHeadline" class="sr-only" tabindex="-1"></h1>
         </div>
       </aside>
 
@@ -554,6 +560,7 @@
   <script src="wave-bg.js?v=90"></script>
   <script src="app.js?v=254"></script>
   <script src="live-reload.js"></script>
-  <script src="auth.js?v=84"></script>
+  <script src="hero3d.js?v=5"></script>
+  <script src="auth.js?v=99"></script>
 </body>
 </html>

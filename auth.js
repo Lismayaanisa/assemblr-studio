@@ -4,9 +4,9 @@
 
   const COPY = {
     en: {
-      lead: "Learning should always be",
-      accent: "engaging",
-      body: "With Assemblr Studio, learning becomes an interactive, fun-filled experience!",
+      lead: "Bring your ideas to life in",
+      accent: "3D/AR",
+      body: "Design it, build it in Assemblr Studio, and let people explore it.",
       login: "Login",
       register: "Register",
       tabs: "Log in or register",
@@ -96,9 +96,9 @@
       newBadge: "New"
     },
     id: {
-      lead: "Belajar harus selalu",
-      accent: "menyenangkan",
-      body: "Dengan Assemblr Studio, belajar menjadi pengalaman interaktif yang penuh keseruan!",
+      lead: "Wujudkan idemu dalam",
+      accent: "3D/AR",
+      body: "Rancang, buat di Assemblr Studio, lalu biarkan orang menjelajahinya.",
       login: "Masuk",
       register: "Daftar",
       tabs: "Masuk atau daftar",
@@ -314,7 +314,6 @@
   function paint() {
     const register = tab === "register";
     $("authHeadline").innerHTML = `${t("lead")} ${spark()}`;
-    $("authLead").textContent = t("body");
     $("authTabs").setAttribute("aria-label", t("tabs"));
     $("tabLogin").textContent = t("login");
     $("tabRegister").textContent = t("register");
