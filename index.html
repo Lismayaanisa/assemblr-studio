@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="assets/assemblr-studio-mark.png" />
-  <link rel="stylesheet" href="styles.css?v=213" />
+  <link rel="stylesheet" href="styles.css?v=214" />
 </head>
 <body data-phase="auth">
   <div class="backdrop" aria-hidden="true">
@@ -286,33 +286,33 @@
         <div class="pane" id="pane-role" data-pane="role">
           <div class="role-area" role="radiogroup" aria-labelledby="title" id="roleGroup">
             <div class="tiles">
-              <button class="tile" type="button" role="radio" aria-checked="false" data-role="student">
-                <span class="tile-icon"><span data-icon="backpack"></span></span>
-                <span class="tile-label">Student</span>
-                <span class="tick" data-icon="check"></span>
-              </button>
               <button class="tile" type="button" role="radio" aria-checked="false" data-role="educator">
                 <span class="tile-icon"><span data-icon="presentation"></span></span>
                 <span class="tile-label">Educator</span>
                 <span class="tick" data-icon="check"></span>
               </button>
-              <button class="tile" type="button" role="radio" aria-checked="false" data-role="parent">
-                <span class="tile-icon"><span data-icon="heart"></span></span>
-                <span class="tile-label">Parent</span>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="student">
+                <span class="tile-icon"><span data-icon="backpack"></span></span>
+                <span class="tile-label">Student</span>
                 <span class="tick" data-icon="check"></span>
               </button>
-              <button class="tile" type="button" role="radio" aria-checked="false" data-role="university">
-                <span class="tile-icon"><span data-icon="graduation"></span></span>
-                <span class="tile-label">University student</span>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="business">
+                <span class="tile-icon"><span data-icon="briefcase"></span></span>
+                <span class="tile-label">Business owner</span>
                 <span class="tick" data-icon="check"></span>
               </button>
-              <button class="tile" type="button" role="radio" aria-checked="false" data-role="lecturer">
-                <span class="tile-icon"><span data-icon="landmark"></span></span>
-                <span class="tile-label">Lecturer</span>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="designer">
+                <span class="tile-icon"><span data-icon="pen"></span></span>
+                <span class="tile-label">Designer</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="marketer">
+                <span class="tile-icon"><span data-icon="megaphone"></span></span>
+                <span class="tile-label">Marketer</span>
                 <span class="tick" data-icon="check"></span>
               </button>
             </div>
-            <div class="other-wrap" data-role="other" id="otherWrap">
+            <div class="other-wrap" data-role="other" id="otherWrap" hidden>
               <button class="other-row" type="button" role="radio" aria-checked="false" data-role="other">
                 <span class="other-icon" data-icon="sparkles"></span>
                 <span class="other-text"><span class="other-title">Other</span><span class="other-sub">Tell us more!</span></span>
@@ -336,7 +336,17 @@
           </div>
         </div>
 
-        <!-- Step 4b: age and how a student joins (students only) -->
+        <!-- Step 4b: sub-role, the detail we use to shape motivation -->
+        <div class="pane" id="pane-subrole" data-pane="subrole">
+          <div class="scroll" id="subroleScroll"></div>
+          <div class="actions">
+            <p class="action-hint" id="subroleHint"></p>
+            <button class="btn btn-ghost" type="button" id="subroleBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="subroleNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 4c: age and how a student joins (students under 13) -->
         <div class="pane" id="pane-age" data-pane="age">
           <div class="scroll" id="ageScroll">
             <div class="q-block">
@@ -542,7 +552,7 @@
   <p class="sr-only" id="announcer" aria-live="polite"></p>
 
   <script src="wave-bg.js?v=90"></script>
-  <script src="app.js?v=253"></script>
+  <script src="app.js?v=254"></script>
   <script src="live-reload.js"></script>
   <script src="auth.js?v=84"></script>
 </body>

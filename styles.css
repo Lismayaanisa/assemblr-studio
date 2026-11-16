@@ -57,6 +57,9 @@
 [data-role="parent"] { --accent: #17936a; --accent-ink: #0f7553; }
 [data-role="lecturer"] { --accent: #12a9e6; --accent-ink: #0e86b8; }
 [data-role="other"] { --accent: #2b6fd8; --accent-ink: #1b72b8; }
+[data-role="business"] { --accent: #2b6fd8; --accent-ink: #1d4fa3; }
+[data-role="designer"] { --accent: #e8408a; --accent-ink: #c21d68; }
+[data-role="marketer"] { --accent: #0f9b8e; --accent-ink: #0c756b; }
 
 [data-tone="1"] { --accent: #2b6fd8; --accent-ink: #1b72b8; }
 [data-tone="2"] { --accent: #e8af1b; --accent-ink: #8a6505; }
@@ -509,7 +512,12 @@ h1 {
 .tile[data-role="educator"]:hover .tile-icon .ico { animation: nudge 720ms var(--ease); }
 .tile[data-role="university"]:hover .tile-icon .ico { animation: toss 720ms var(--ease); }
 .tile[data-role="parent"]:hover .tile-icon .ico,
-.tile[data-role="lecturer"]:hover .tile-icon .ico { animation: glow 900ms var(--ease); }
+.tile[data-role="lecturer"]:hover .tile-icon .ico,
+.tile[data-role="business"]:hover .tile-icon .ico,
+.tile[data-role="marketer"]:hover .tile-icon .ico { animation: glow 900ms var(--ease); }
+.tile[data-role="designer"]:hover .tile-icon .ico { animation: nudge 720ms var(--ease); }
+.pane.is-banded .age-field { display: none; }
+.sub-hint { margin: 8px 0 0; color: var(--text-soft); font-size: 13px; line-height: 1.45; }
 @keyframes toss {
   0%, 100% { transform: none; }
   35% { transform: translateY(-6px) rotate(-14deg); }

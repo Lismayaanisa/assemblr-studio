@@ -37,6 +37,7 @@
     map: '<path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>',
     rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
     briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+    megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
     compass: '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>',
     heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
     calculator: '<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
@@ -89,7 +90,7 @@
     "Hehe, that tickles!": "Hehe, geli!", "Hi again!": "Hai lagi!", "You've got this!": "Kamu pasti bisa!",
     "Choose one to continue": "Pilih salah satu untuk lanjut",
     "Setup progress": "Progres pengisian",
-    "You": "Kamu", "Source": "Sumber", "Phone": "Telepon", "Role": "Peran", "Goal": "Tujuan", "Subject": "Mata pelajaran", "Try it": "Coba",
+    "You": "Kamu", "Source": "Sumber", "Phone": "Telepon", "Role": "Peran", "About you": "Tentang kamu", "Goal": "Tujuan", "Subject": "Mata pelajaran", "Try it": "Coba",
 
     // Step 1: name + look
     "What's your name?": "Siapa namamu?", "Hi, I'm blr!": "Hai, aku blr!",
@@ -621,7 +622,10 @@
     university: { label: "University student", icon: "graduation", greet: "Hi there!", phrase: "a university student", loading: "Picking ideas for university students" },
     parent: { label: "Parent", icon: "heart", greet: "Hi there!", phrase: "a parent", loading: "Picking ideas for parents" },
     lecturer: { label: "Lecturer", icon: "landmark", greet: "Hi there!", phrase: "a lecturer", loading: "Picking ideas for lecturers" },
-    other: { label: "Other", icon: "sparkles", greet: "Hi there!", phrase: null, loading: "Picking ideas for you" }
+    other: { label: "Other", icon: "sparkles", greet: "Hi there!", phrase: null, loading: "Picking ideas for you" },
+    business: { label: "Business owner", icon: "briefcase", greet: "What would you like to make?", phrase: "a business owner", loading: "Picking ideas for business owners" },
+    designer: { label: "Designer", icon: "pen", greet: "What would you like to make?", phrase: "a designer", loading: "Picking ideas for designers" },
+    marketer: { label: "Marketer", icon: "megaphone", greet: "What would you like to make?", phrase: "a marketer", loading: "Picking ideas for marketers" }
   };
 
   const FLOWS = {
@@ -734,6 +738,569 @@
     personal: "start a personal project"
   };
 
+  /* Studio motivations. Draft copy, keyed by role and sub-role. Ids already in use stay as they are. */
+  function remember(en, idn) {
+    if (en && idn && !Object.hasOwn(ID, en)) ID[en] = idn;
+    return en;
+  }
+  function studioJob(id, iconName, labelEn, labelId, wantEn, wantId, welcome) {
+    remember(labelEn, labelId);
+    remember(wantEn, wantId);
+    return { id, icon: iconName, label: labelEn, want: wantEn, welcome };
+  }
+  function elseJob() {
+    return studioJob("other", "sparkles", "Something else", "Lainnya", "try something of your own", "mencoba hal yang kamu mau", W_EDITOR);
+  }
+  const W_EDITOR = remember("Build it in the Editor, then view it in AR.", "Buat di Editor, lalu lihat dalam AR.");
+  const W_MARKER = remember("Use Custom Marker so people can open it in AR from something they hold.", "Pakai Custom Marker supaya orang bisa membukanya dalam AR dari benda yang mereka pegang.");
+  const W_AI = remember("Use AI-3D Generation to turn an image or text into 3D.", "Pakai AI-3D Generation untuk mengubah gambar atau teks menjadi 3D.");
+  const W_CODE = remember("Use Visual Coding to make objects move and react.", "Pakai Visual Coding supaya objek bisa bergerak dan merespons.");
+  const W_SHARE = remember("Publish it from the Editor, then share a link people can open.", "Terbitkan dari Editor, lalu bagikan tautan yang bisa dibuka orang.");
+  remember("try Assemblr Studio for what you need", "mencoba Assemblr Studio sesuai kebutuhanmu");
+  remember("What would you like to make?", "Apa yang ingin kamu buat?");
+  remember("Where do you teach?", "Kamu mengajar di mana?");
+  remember("Where do you learn?", "Kamu belajar di mana?");
+  remember("What kind of business is it?", "Bisnis seperti apa?");
+  remember("What kind of design do you do?", "Kamu mendesain apa?");
+  remember("What kind of marketing do you do?", "Kamu mengerjakan pemasaran yang mana?");
+  remember("How many people work there?", "Berapa orang yang bekerja di situ?");
+  remember("TK is kindergarten. SD is elementary, SMP junior high, and SMA senior high. SLB is special education.", "TK, SD, SMP, dan SMA adalah jenjang sekolah. SLB adalah sekolah luar biasa.");
+  remember("Choose where you teach to continue", "Pilih tempat kamu mengajar untuk lanjut");
+  remember("Choose where you learn to continue", "Pilih tempat kamu belajar untuk lanjut");
+  remember("Choose the kind of business to continue", "Pilih jenis bisnis untuk lanjut");
+  remember("Choose how many people work there", "Pilih jumlah orang yang bekerja di situ");
+  remember("Choose the kind of design you do", "Pilih jenis desain yang kamu kerjakan");
+  remember("Choose the kind of marketing you do", "Pilih jenis pemasaran yang kamu kerjakan");
+  remember("Choose your age group to continue", "Pilih kelompok umur untuk lanjut");
+  remember("Tell us the kind in a few words", "Ceritakan jenisnya dalam beberapa kata");
+  remember("Business owner", "Pemilik bisnis");
+  remember("Designer", "Desainer");
+  remember("Marketer", "Pemasar");
+  remember("a business owner", "pemilik bisnis");
+  remember("a designer", "seorang desainer");
+  remember("a marketer", "seorang pemasar");
+  remember("Picking ideas for business owners", "Memilih ide untuk pemilik bisnis");
+  remember("Picking ideas for designers", "Memilih ide untuk desainer");
+  remember("Picking ideas for marketers", "Memilih ide untuk pemasar");
+  remember("Under 13", "Di bawah 13 tahun");
+  remember("13 or older", "13 tahun ke atas");
+  remember("Product or brand", "Produk atau merek");
+  remember("Shop or retail", "Toko atau ritel");
+  remember("Food and drink", "Makanan dan minuman");
+  remember("Agency or studio", "Agensi atau studio");
+  remember("Manufacturer", "Pabrikan");
+  remember("Education business", "Bisnis pendidikan");
+  remember("Just me", "Hanya saya");
+  remember("2–10", "2–10");
+  remember("11–50", "11–50");
+  remember("51–200", "51–200");
+  remember("More than 200", "Lebih dari 200");
+  remember("Illustration", "Ilustrasi");
+  remember("Landscape", "Lanskap");
+  remember("Graphic design", "Desain grafis");
+  remember("UI and product", "UI dan produk");
+  remember("Interior", "Interior");
+  remember("Fashion", "Fesyen");
+  remember("3D and motion", "3D dan motion");
+  remember("Digital marketing", "Pemasaran digital");
+  remember("Ads", "Iklan");
+  remember("Social media", "Media sosial");
+  remember("Content", "Konten");
+  remember("Brand", "Merek");
+  remember("Product marketing", "Pemasaran produk");
+  remember("For a TK class, what would you like to make?", "Untuk kelas TK, apa yang ingin kamu buat?");
+  remember("For an SD class, what would you like to make?", "Untuk kelas SD, apa yang ingin kamu buat?");
+  remember("For an SMP class, what would you like to make?", "Untuk kelas SMP, apa yang ingin kamu buat?");
+  remember("For an SMA class, what would you like to make?", "Untuk kelas SMA, apa yang ingin kamu buat?");
+  remember("For a university class, what would you like to make?", "Untuk kelas universitas, apa yang ingin kamu buat?");
+  remember("For an SLB class, what would you like to make?", "Untuk kelas SLB, apa yang ingin kamu buat?");
+  remember("You learn in TK and you're under 13. What would you like to make?", "Kamu belajar di TK dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn in SD and you're under 13. What would you like to make?", "Kamu belajar di SD dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn in SMP and you're under 13. What would you like to make?", "Kamu belajar di SMP dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn in SMA and you're under 13. What would you like to make?", "Kamu belajar di SMA dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn at university and you're under 13. What would you like to make?", "Kamu belajar di universitas dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn in SLB and you're under 13. What would you like to make?", "Kamu belajar di SLB dan usiamu di bawah 13. Apa yang ingin kamu buat?");
+  remember("You learn in TK. What would you like to make?", "Kamu belajar di TK. Apa yang ingin kamu buat?");
+  remember("You learn in SD. What would you like to make?", "Kamu belajar di SD. Apa yang ingin kamu buat?");
+  remember("You learn in SMP. What would you like to make?", "Kamu belajar di SMP. Apa yang ingin kamu buat?");
+  remember("You learn in SMA. What would you like to make?", "Kamu belajar di SMA. Apa yang ingin kamu buat?");
+  remember("You learn at university. What would you like to make?", "Kamu belajar di universitas. Apa yang ingin kamu buat?");
+  remember("You learn in SLB. What would you like to make?", "Kamu belajar di SLB. Apa yang ingin kamu buat?");
+  remember("You run a product or brand yourself. What would you like to make?", "Kamu menjalankan produk atau merek sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works on a product or brand. What would you like to make?", "Timmu mengerjakan produk atau merek. Apa yang ingin kamu buat?");
+  remember("You run a shop yourself. What would you like to make?", "Kamu menjalankan toko sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works in a shop. What would you like to make?", "Timmu bekerja di toko. Apa yang ingin kamu buat?");
+  remember("You run a food business yourself. What would you like to make?", "Kamu menjalankan bisnis makanan sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works in a food business. What would you like to make?", "Timmu bekerja di bisnis makanan. Apa yang ingin kamu buat?");
+  remember("You run an agency yourself. What would you like to make?", "Kamu menjalankan agensi sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works in an agency. What would you like to make?", "Timmu bekerja di agensi. Apa yang ingin kamu buat?");
+  remember("You run a manufacturer yourself. What would you like to make?", "Kamu menjalankan pabrikan sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works at a manufacturer. What would you like to make?", "Timmu bekerja di pabrikan. Apa yang ingin kamu buat?");
+  remember("You run an education business yourself. What would you like to make?", "Kamu menjalankan bisnis pendidikan sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works in an education business. What would you like to make?", "Timmu bekerja di bisnis pendidikan. Apa yang ingin kamu buat?");
+  remember("You run the business yourself. What would you like to make?", "Kamu menjalankan bisnisnya sendiri. Apa yang ingin kamu buat?");
+  remember("Your team works in the business. What would you like to make?", "Timmu bekerja di bisnis itu. Apa yang ingin kamu buat?");
+  remember("For illustration, what would you like to make?", "Untuk ilustrasi, apa yang ingin kamu buat?");
+  remember("For landscape design, what would you like to make?", "Untuk desain lanskap, apa yang ingin kamu buat?");
+  remember("For graphic design, what would you like to make?", "Untuk desain grafis, apa yang ingin kamu buat?");
+  remember("For UI and product design, what would you like to make?", "Untuk desain UI dan produk, apa yang ingin kamu buat?");
+  remember("For interior design, what would you like to make?", "Untuk desain interior, apa yang ingin kamu buat?");
+  remember("For fashion design, what would you like to make?", "Untuk desain fesyen, apa yang ingin kamu buat?");
+  remember("For 3D and motion, what would you like to make?", "Untuk 3D dan motion, apa yang ingin kamu buat?");
+  remember("For your design work, what would you like to make?", "Untuk pekerjaan desainmu, apa yang ingin kamu buat?");
+  remember("For digital marketing, what would you like to make?", "Untuk pemasaran digital, apa yang ingin kamu buat?");
+  remember("For ads, what would you like to make?", "Untuk iklan, apa yang ingin kamu buat?");
+  remember("For social media, what would you like to make?", "Untuk media sosial, apa yang ingin kamu buat?");
+  remember("For content, what would you like to make?", "Untuk konten, apa yang ingin kamu buat?");
+  remember("For brand marketing, what would you like to make?", "Untuk pemasaran merek, apa yang ingin kamu buat?");
+  remember("For product marketing, what would you like to make?", "Untuk pemasaran produk, apa yang ingin kamu buat?");
+  remember("For your marketing, what would you like to make?", "Untuk pemasaranmu, apa yang ingin kamu buat?");
+  remember("This sets up examples for your learners.", "Ini membantu aku menyiapkan contoh untuk peserta didikmu.");
+  remember("This sets up examples for where you learn.", "Ini membantu aku menyiapkan contoh untuk tempat kamu belajar.");
+  remember("This sets up a starting point for your business.", "Ini membantu aku menyiapkan titik mulai untuk bisnismu.");
+  remember("This sets up a starting point for your design work.", "Ini membantu aku menyiapkan titik mulai untuk pekerjaan desainmu.");
+  remember("This sets up a starting point for your marketing.", "Ini membantu aku menyiapkan titik mulai untuk pemasaranmu.");
+  remember("Let learners explore a model", "Biarkan peserta didik menjelajahi model");
+  remember("Place it in the Editor. They tap, turn, and open it in AR.", "Taruh di Editor. Mereka ketuk, putar, lalu buka dalam AR.");
+  remember("Connect 3D/AR to something real", "Hubungkan 3D/AR ke benda nyata");
+  remember("Use Custom Marker on a card, poster, or object.", "Pakai Custom Marker di kartu, poster, atau benda.");
+  remember("Put 3D/AR on a real product", "Pasang 3D/AR pada produk nyata");
+  remember("Use Custom Marker on packaging, a menu, or a card.", "Pakai Custom Marker di kemasan, menu, atau kartu.");
+  remember("Create a 3D object from an image", "Buat objek 3D dari gambar");
+  remember("Show the work in 3D", "Tampilkan karyanya dalam 3D");
+  remember("Open it from the Editor, then view it in AR.", "Buka dari Editor, lalu lihat dalam AR.");
+  remember("Make a campaign people can open", "Buat kampanye yang bisa dibuka orang");
+  remember("Publish a 3D/AR moment, then share the link.", "Terbitkan momen 3D/AR, lalu bagikan tautannya.");
+
+  const j = studioJob;
+  const EDUCATOR_JOBS = {
+    tk: [
+      j("ed-tk-story", "book", "Show a story children can walk around in 3D", "Menunjukkan cerita yang bisa dijelajahi anak-anak dalam 3D", "show a story children can walk around in 3D", "menunjukkan cerita yang bisa dijelajahi anak-anak dalam 3D", W_EDITOR),
+      j("ed-tk-card", "scan", "Put a picture card into AR for circle time", "Menaruh kartu gambar ke dalam AR untuk lingkaran cerita", "put a picture card into AR for circle time", "menaruh kartu gambar ke dalam AR untuk lingkaran cerita", W_MARKER),
+      j("ed-tk-model", "box", "Let children turn one simple model", "Membiarkan anak-anak memutar satu model sederhana", "let children turn one simple model", "membiarkan anak-anak memutar satu model sederhana", W_EDITOR),
+      elseJob()
+    ],
+    sd: [
+      j("ed-sd-lesson", "box", "Explain a lesson with a model students can turn", "Menjelaskan pelajaran dengan model yang bisa diputar siswa", "explain a lesson with a model students can turn", "menjelaskan pelajaran dengan model yang bisa diputar siswa", W_EDITOR),
+      j("ed-sd-phone", "scan", "Make an AR moment students open on a phone", "Membuat momen AR yang dibuka siswa di ponsel", "make an AR moment students open on a phone", "membuat momen AR yang dibuka siswa di ponsel", W_MARKER),
+      j("ed-sd-class", "users", "Build a class project students can explore", "Membuat proyek kelas yang bisa dijelajahi siswa", "build a class project students can explore", "membuat proyek kelas yang bisa dijelajahi siswa", W_SHARE),
+      elseJob()
+    ],
+    smp: [
+      j("ed-smp-topic", "layers", "Turn a topic into an interactive 3D project", "Mengubah topik jadi proyek 3D interaktif", "turn a topic into an interactive 3D project", "mengubah topik jadi proyek 3D interaktif", W_EDITOR),
+      j("ed-smp-present", "presentation", "Have students present an idea in 3D", "Meminta siswa mempresentasikan ide dalam 3D", "have students present an idea in 3D", "meminta siswa mempresentasikan ide dalam 3D", W_SHARE),
+      j("ed-smp-poster", "scan", "Add AR to a poster or worksheet", "Menambahkan AR pada poster atau lembar kerja", "add AR to a poster or worksheet", "menambahkan AR pada poster atau lembar kerja", W_MARKER),
+      elseJob()
+    ],
+    sma: [
+      j("ed-sma-present", "presentation", "Have students build a project they can present", "Meminta siswa membuat proyek yang bisa mereka presentasikan", "have students build a project they can present", "meminta siswa membuat proyek yang bisa mereka presentasikan", W_EDITOR),
+      j("ed-sma-concept", "lightbulb", "Show a hard concept they can explore in 3D", "Menunjukkan konsep sulit yang bisa mereka jelajahi dalam 3D", "show a hard concept they can explore in 3D", "menunjukkan konsep sulit yang bisa mereka jelajahi dalam 3D", W_EDITOR),
+      j("ed-sma-publish", "rocket", "Publish a project the class can open in AR", "Menerbitkan proyek yang bisa dibuka kelas dalam AR", "publish a project the class can open in AR", "menerbitkan proyek yang bisa dibuka kelas dalam AR", W_SHARE),
+      elseJob()
+    ],
+    uni: [
+      j("ed-uni-lecture", "presentation", "Illustrate a lecture with a 3D model", "Menggambarkan kuliah dengan model 3D", "illustrate a lecture with a 3D model", "menggambarkan kuliah dengan model 3D", W_EDITOR),
+      j("ed-uni-publish", "rocket", "Have students publish their own AR work", "Meminta mahasiswa menerbitkan karya AR mereka", "have students publish their own AR work", "meminta mahasiswa menerbitkan karya AR mereka", W_SHARE),
+      j("ed-uni-idea", "lightbulb", "Visualize an idea others can explore", "Memvisualkan ide yang bisa dijelajahi orang lain", "visualize an idea others can explore", "memvisualkan ide yang bisa dijelajahi orang lain", W_EDITOR),
+      elseJob()
+    ],
+    slb: [
+      j("ed-slb-model", "box", "Make a concept concrete with a model learners can turn", "Membuat konsep jadi konkret dengan model yang bisa diputar", "make a concept concrete with a model learners can turn", "membuat konsep jadi konkret dengan model yang bisa diputar", W_EDITOR),
+      j("ed-slb-table", "scan", "Keep a lesson on the table in front of them with AR", "Menaruh pelajaran di meja di depan mereka dengan AR", "keep a lesson on the table in front of them with AR", "menaruh pelajaran di meja di depan mereka dengan AR", W_MARKER),
+      j("ed-slb-short", "puzzle", "Build a short activity with only a few steps", "Membuat aktivitas singkat dengan sedikit langkah", "build a short activity with only a few steps", "membuat aktivitas singkat dengan sedikit langkah", W_EDITOR),
+      elseJob()
+    ]
+  };
+  const stu = (id, iconName, labelEn, labelId, welcome) => j(id, iconName, labelEn, labelId, labelEn.charAt(0).toLowerCase() + labelEn.slice(1), labelId.charAt(0).toLowerCase() + labelId.slice(1), welcome);
+  const STUDENT_JOBS = {
+    under: {
+      tk: [
+        stu("st-u-tk-1", "book", "Make a 3D story I can show", "Membuat cerita 3D yang bisa kutunjukkan", W_EDITOR),
+        stu("st-u-tk-2", "box", "Turn a model and see what it does", "Memutar model dan melihat apa yang terjadi", W_EDITOR),
+        stu("st-u-tk-3", "scan", "Put my drawing into AR", "Menaruh gambarku ke dalam AR", W_AI),
+        elseJob()
+      ],
+      sd: [
+        stu("st-u-sd-1", "clipboard", "Make a school project I can show", "Membuat proyek sekolah yang bisa kutunjukkan", W_EDITOR),
+        stu("st-u-sd-2", "box", "Turn a model from my lesson", "Memutar model dari pelajaranku", W_EDITOR),
+        stu("st-u-sd-3", "scan", "Put my drawing into AR", "Menaruh gambarku ke dalam AR", W_AI),
+        elseJob()
+      ],
+      smp: [
+        stu("st-u-smp-1", "clipboard", "Make a project I can show my teacher", "Membuat proyek yang bisa kutunjukkan ke guru", W_EDITOR),
+        stu("st-u-smp-2", "compass", "Explore a model at my own pace", "Menjelajahi model dengan kecepatanku sendiri", W_EDITOR),
+        stu("st-u-smp-3", "pencil", "Try the Editor with a grown-up", "Mencoba Editor bersama orang dewasa", W_EDITOR),
+        elseJob()
+      ],
+      sma: [
+        stu("st-u-sma-1", "clipboard", "Make an SMA project I can show", "Membuat proyek SMA yang bisa kutunjukkan", W_EDITOR),
+        stu("st-u-sma-2", "compass", "Explore a model at my own pace", "Menjelajahi model dengan kecepatanku sendiri", W_EDITOR),
+        stu("st-u-sma-3", "pencil", "Try the Editor with a grown-up", "Mencoba Editor bersama orang dewasa", W_EDITOR),
+        elseJob()
+      ],
+      uni: [
+        stu("st-u-uni-1", "book", "Make a project I can show with a grown-up", "Membuat proyek yang bisa kutunjukkan bersama orang dewasa", W_EDITOR),
+        stu("st-u-uni-2", "compass", "Explore a model at my own pace", "Menjelajahi model dengan kecepatanku sendiri", W_EDITOR),
+        stu("st-u-uni-3", "pencil", "Try the Editor with a grown-up", "Mencoba Editor bersama orang dewasa", W_EDITOR),
+        elseJob()
+      ],
+      slb: [
+        stu("st-u-slb-1", "heart", "Make something I can explore slowly", "Membuat sesuatu yang bisa kujelajahi pelan-pelan", W_EDITOR),
+        stu("st-u-slb-2", "box", "Turn one model and see what it does", "Memutar satu model dan melihat apa yang terjadi", W_EDITOR),
+        stu("st-u-slb-3", "pencil", "Try the Editor with a grown-up", "Mencoba Editor bersama orang dewasa", W_EDITOR),
+        elseJob()
+      ]
+    },
+    over: {
+      tk: [
+        stu("st-o-tk-1", "book", "Make a 3D story I can present", "Membuat cerita 3D yang bisa kupresentasikan", W_EDITOR),
+        stu("st-o-tk-2", "pencil", "Learn to build in the Editor", "Belajar membuat di Editor", W_EDITOR),
+        stu("st-o-tk-3", "scan", "Turn an idea into AR", "Mengubah ide menjadi AR", W_MARKER),
+        elseJob()
+      ],
+      sd: [
+        stu("st-o-sd-1", "clipboard", "Make a school project I can present", "Membuat proyek sekolah yang bisa kupresentasikan", W_EDITOR),
+        stu("st-o-sd-2", "pencil", "Learn to build in the Editor", "Belajar membuat di Editor", W_EDITOR),
+        stu("st-o-sd-3", "sparkles", "Try AI-3D Generation", "Mencoba AI-3D Generation", W_AI),
+        elseJob()
+      ],
+      smp: [
+        stu("st-o-smp-1", "presentation", "Make a project I can present in class", "Membuat proyek yang bisa kupresentasikan di kelas", W_EDITOR),
+        stu("st-o-smp-2", "pencil", "Learn to build in the Editor", "Belajar membuat di Editor", W_EDITOR),
+        stu("st-o-smp-3", "scan", "Turn an idea into AR", "Mengubah ide menjadi AR", W_MARKER),
+        stu("st-o-smp-4", "sparkles", "Try AI-3D Generation", "Mencoba AI-3D Generation", W_AI),
+        elseJob()
+      ],
+      sma: [
+        stu("st-o-sma-1", "presentation", "Make a project I can present", "Membuat proyek yang bisa kupresentasikan", W_EDITOR),
+        stu("st-o-sma-2", "briefcase", "Build a piece for my portfolio", "Membuat karya untuk portofolioku", W_SHARE),
+        stu("st-o-sma-3", "scan", "Turn an idea into AR", "Mengubah ide menjadi AR", W_MARKER),
+        stu("st-o-sma-4", "sparkles", "Try AI-3D Generation", "Mencoba AI-3D Generation", W_AI),
+        elseJob()
+      ],
+      uni: [
+        stu("st-o-uni-1", "book", "Build a project for a course or studio", "Membuat proyek untuk kuliah atau studio", W_EDITOR),
+        stu("st-o-uni-2", "lightbulb", "Visualize an idea I can present", "Memvisualkan ide yang bisa kupresentasikan", W_EDITOR),
+        stu("st-o-uni-3", "rocket", "Publish work people can open in AR", "Menerbitkan karya yang bisa dibuka orang dalam AR", W_SHARE),
+        stu("st-o-uni-4", "sparkles", "Try AI-3D Generation", "Mencoba AI-3D Generation", W_AI),
+        elseJob()
+      ],
+      slb: [
+        stu("st-o-slb-1", "heart", "Make a project I can explore at my pace", "Membuat proyek yang bisa kujelajahi dengan kecepatanku", W_EDITOR),
+        stu("st-o-slb-2", "box", "Show my idea in 3D", "Menunjukkan ideku dalam 3D", W_EDITOR),
+        stu("st-o-slb-3", "pencil", "Learn the Editor one step at a time", "Belajar Editor selangkah demi selangkah", W_EDITOR),
+        elseJob()
+      ]
+    }
+  };
+  function teamJob() {
+    if (state.team === "solo") {
+      return j("team-solo", "user", "Build it myself in the Editor", "Membangunnya sendiri di Editor", "build it myself in the Editor", "membangunnya sendiri di Editor", W_EDITOR);
+    }
+    return j("team-share", "users", "Make a scene the team can reuse", "Membuat scene yang bisa dipakai tim lagi", "make a scene the team can reuse", "membuat scene yang bisa dipakai tim lagi", W_SHARE);
+  }
+  const BUSINESS_JOBS = {
+    product: () => [
+      j("bz-product-1", "box", "Show a product people can turn in AR", "Menunjukkan produk yang bisa diputar orang dalam AR", "show a product people can turn in AR", "menunjukkan produk yang bisa diputar orang dalam AR", W_EDITOR),
+      j("bz-product-2", "scan", "Put a Custom Marker on the packaging", "Memasang Custom Marker di kemasan", "put a Custom Marker on the packaging", "memasang Custom Marker di kemasan", W_MARKER),
+      j("bz-product-3", "layers", "Build a 3D catalog people can browse", "Membuat katalog 3D yang bisa dijelajahi orang", "build a 3D catalog people can browse", "membuat katalog 3D yang bisa dijelajahi orang", W_SHARE),
+      teamJob(),
+      elseJob()
+    ],
+    retail: () => [
+      j("bz-retail-1", "box", "Let shoppers view a product in 3D", "Membiarkan pengunjung melihat produk dalam 3D", "let shoppers view a product in 3D", "membiarkan pengunjung melihat produk dalam 3D", W_EDITOR),
+      j("bz-retail-2", "scan", "Open an in-store display on a phone", "Membuka pajangan toko di ponsel", "open an in-store display on a phone", "membuka pajangan toko di ponsel", W_MARKER),
+      j("bz-retail-3", "map", "Show a product in AR beside the shelf", "Menunjukkan produk dalam AR di samping rak", "show a product in AR beside the shelf", "menunjukkan produk dalam AR di samping rak", W_EDITOR),
+      teamJob(),
+      elseJob()
+    ],
+    food: () => [
+      j("bz-food-1", "box", "Show a dish in 3D before someone orders", "Menunjukkan hidangan dalam 3D sebelum orang memesan", "show a dish in 3D before someone orders", "menunjukkan hidangan dalam 3D sebelum orang memesan", W_EDITOR),
+      j("bz-food-2", "scan", "Put a Custom Marker on the menu", "Memasang Custom Marker di menu", "put a Custom Marker on the menu", "memasang Custom Marker di menu", W_MARKER),
+      j("bz-food-3", "layers", "Let people place a dish on their table in AR", "Membiarkan orang menaruh hidangan di meja mereka dalam AR", "let people place a dish on their table in AR", "membiarkan orang menaruh hidangan di meja mereka dalam AR", W_EDITOR),
+      teamJob(),
+      elseJob()
+    ],
+    agency: () => [
+      j("bz-agency-1", "rocket", "Make 3D/AR a client can open on their phone", "Membuat 3D/AR yang bisa dibuka klien di ponsel", "make 3D/AR a client can open on their phone", "membuat 3D/AR yang bisa dibuka klien di ponsel", W_SHARE),
+      j("bz-agency-2", "presentation", "Pitch an idea people can turn in 3D", "Menawarkan ide yang bisa diputar orang dalam 3D", "pitch an idea people can turn in 3D", "menawarkan ide yang bisa diputar orang dalam 3D", W_EDITOR),
+      j("bz-agency-3", "scan", "Put a client's product on a Custom Marker", "Memasang produk klien pada Custom Marker", "put a client's product on a Custom Marker", "memasang produk klien pada Custom Marker", W_MARKER),
+      teamJob(),
+      elseJob()
+    ],
+    maker: () => [
+      j("bz-maker-1", "layers", "Show how a product works in 3D", "Menunjukkan cara kerja produk dalam 3D", "show how a product works in 3D", "menunjukkan cara kerja produk dalam 3D", W_EDITOR),
+      j("bz-maker-2", "scan", "Put a Custom Marker on the packaging", "Memasang Custom Marker di kemasan", "put a Custom Marker on the packaging", "memasang Custom Marker di kemasan", W_MARKER),
+      j("bz-maker-3", "box", "Let buyers turn the product in AR", "Membiarkan pembeli memutar produk dalam AR", "let buyers turn the product in AR", "membiarkan pembeli memutar produk dalam AR", W_EDITOR),
+      teamJob(),
+      elseJob()
+    ],
+    edbiz: () => [
+      j("bz-ed-1", "box", "Let people explore a sample in 3D", "Membiarkan orang menjelajahi contoh dalam 3D", "let people explore a sample in 3D", "membiarkan orang menjelajahi contoh dalam 3D", W_EDITOR),
+      j("bz-ed-2", "scan", "Show a demo they can open in AR", "Menunjukkan demo yang bisa mereka buka dalam AR", "show a demo they can open in AR", "menunjukkan demo yang bisa mereka buka dalam AR", W_MARKER),
+      j("bz-ed-3", "rocket", "Publish a project learners can open", "Menerbitkan proyek yang bisa dibuka peserta", "publish a project learners can open", "menerbitkan proyek yang bisa dibuka peserta", W_SHARE),
+      teamJob(),
+      elseJob()
+    ],
+    other: () => [
+      j("bz-other-1", "box", "Show what we make in 3D", "Menunjukkan apa yang kami buat dalam 3D", "show what we make in 3D", "menunjukkan apa yang kami buat dalam 3D", W_EDITOR),
+      j("bz-other-2", "scan", "Let people open it in AR", "Membiarkan orang membukanya dalam AR", "let people open it in AR", "membiarkan orang membukanya dalam AR", W_SHARE),
+      teamJob(),
+      elseJob()
+    ]
+  };
+  const DESIGNER_JOBS = {
+    illustration: [
+      j("ds-il-1", "pen", "Bring an illustration into 3D", "Membawa ilustrasi ke dalam 3D", "bring an illustration into 3D", "membawa ilustrasi ke dalam 3D", W_EDITOR),
+      j("ds-il-2", "scan", "Let people view it in AR", "Membiarkan orang melihatnya dalam AR", "let people view it in AR", "membiarkan orang melihatnya dalam AR", W_MARKER),
+      j("ds-il-3", "sparkles", "Turn a drawing into 3D with AI-3D Generation", "Mengubah gambar jadi 3D dengan AI-3D Generation", "turn a drawing into 3D with AI-3D Generation", "mengubah gambar jadi 3D dengan AI-3D Generation", W_AI),
+      elseJob()
+    ],
+    landscape: [
+      j("ds-ls-1", "map", "Walk someone through a site in 3D", "Mengajak seseorang menelusuri lahan dalam 3D", "walk someone through a site in 3D", "mengajak seseorang menelusuri lahan dalam 3D", W_EDITOR),
+      j("ds-ls-2", "layers", "Show a plan they can turn and explore", "Menunjukkan rencana yang bisa diputar dan dijelajahi", "show a plan they can turn and explore", "menunjukkan rencana yang bisa diputar dan dijelajahi", W_EDITOR),
+      j("ds-ls-3", "scan", "Open the site in AR on a table", "Membuka lahan dalam AR di atas meja", "open the site in AR on a table", "membuka lahan dalam AR di atas meja", W_MARKER),
+      elseJob()
+    ],
+    graphic: [
+      j("ds-gr-1", "scan", "Turn a poster or pack into AR", "Mengubah poster atau kemasan jadi AR", "turn a poster or pack into AR", "mengubah poster atau kemasan jadi AR", W_MARKER),
+      j("ds-gr-2", "box", "Show the design as a 3D object", "Menunjukkan desain sebagai objek 3D", "show the design as a 3D object", "menunjukkan desain sebagai objek 3D", W_EDITOR),
+      j("ds-gr-3", "sparkles", "Turn a sketch into 3D with AI-3D Generation", "Mengubah sketsa jadi 3D dengan AI-3D Generation", "turn a sketch into 3D with AI-3D Generation", "mengubah sketsa jadi 3D dengan AI-3D Generation", W_AI),
+      elseJob()
+    ],
+    ui: [
+      j("ds-ui-1", "box", "Prototype a product people can turn in 3D", "Membuat prototipe produk yang bisa diputar dalam 3D", "prototype a product people can turn in 3D", "membuat prototipe produk yang bisa diputar dalam 3D", W_EDITOR),
+      j("ds-ui-2", "layers", "Show how a product works", "Menunjukkan cara kerja produk", "show how a product works", "menunjukkan cara kerja produk", W_CODE),
+      j("ds-ui-3", "scan", "Place the product in AR", "Menaruh produk dalam AR", "place the product in AR", "menaruh produk dalam AR", W_MARKER),
+      elseJob()
+    ],
+    interior: [
+      j("ds-in-1", "map", "Let someone look around a room in 3D", "Membiarkan seseorang melihat sekeliling ruangan dalam 3D", "let someone look around a room in 3D", "membiarkan seseorang melihat sekeliling ruangan dalam 3D", W_EDITOR),
+      j("ds-in-2", "scan", "Place the room on a table in AR", "Menaruh ruangan di atas meja dalam AR", "place the room on a table in AR", "menaruh ruangan di atas meja dalam AR", W_MARKER),
+      j("ds-in-3", "layers", "Walk through a layout before it is built", "Menelusuri tata letak sebelum dibangun", "walk through a layout before it is built", "menelusuri tata letak sebelum dibangun", W_EDITOR),
+      elseJob()
+    ],
+    fashion: [
+      j("ds-fa-1", "scan", "Show a piece in AR", "Menunjukkan sebuah karya dalam AR", "show a piece in AR", "menunjukkan sebuah karya dalam AR", W_MARKER),
+      j("ds-fa-2", "box", "Let someone turn a design in 3D", "Membiarkan seseorang memutar desain dalam 3D", "let someone turn a design in 3D", "membiarkan seseorang memutar desain dalam 3D", W_EDITOR),
+      j("ds-fa-3", "layers", "Put a Custom Marker on a lookbook or tag", "Memasang Custom Marker di lookbook atau label", "put a Custom Marker on a lookbook or tag", "memasang Custom Marker di lookbook atau label", W_MARKER),
+      elseJob()
+    ],
+    motion: [
+      j("ds-mo-1", "rocket", "Build a scene and make it move", "Membuat scene dan membuatnya bergerak", "build a scene and make it move", "membuat scene dan membuatnya bergerak", W_CODE),
+      j("ds-mo-2", "code", "Use Visual Coding so objects react", "Memakai Visual Coding supaya objek merespons", "use Visual Coding so objects react", "memakai Visual Coding supaya objek merespons", W_CODE),
+      j("ds-mo-3", "sparkles", "Turn a sketch into 3D with AI-3D Generation", "Mengubah sketsa jadi 3D dengan AI-3D Generation", "turn a sketch into 3D with AI-3D Generation", "mengubah sketsa jadi 3D dengan AI-3D Generation", W_AI),
+      elseJob()
+    ],
+    other: [
+      j("ds-ot-1", "box", "Bring my work into 3D", "Membawa karyaku ke dalam 3D", "bring my work into 3D", "membawa karyaku ke dalam 3D", W_EDITOR),
+      j("ds-ot-2", "scan", "Show it in AR", "Menunjukkannya dalam AR", "show it in AR", "menunjukkannya dalam AR", W_MARKER),
+      elseJob()
+    ]
+  };
+  const MARKETER_JOBS = {
+    digital: [
+      j("mk-dg-1", "rocket", "Make a campaign people open in AR", "Membuat kampanye yang dibuka orang dalam AR", "make a campaign people open in AR", "membuat kampanye yang dibuka orang dalam AR", W_SHARE),
+      j("mk-dg-2", "box", "Show a 3D product they can turn", "Menunjukkan produk 3D yang bisa mereka putar", "show a 3D product they can turn", "menunjukkan produk 3D yang bisa mereka putar", W_EDITOR),
+      j("mk-dg-3", "globe", "Share a link that opens the experience", "Membagikan tautan yang membuka pengalaman itu", "share a link that opens the experience", "membagikan tautan yang membuka pengalaman itu", W_SHARE),
+      elseJob()
+    ],
+    ads: [
+      j("mk-ad-1", "megaphone", "Make an ad that opens a 3D product", "Membuat iklan yang membuka produk 3D", "make an ad that opens a 3D product", "membuat iklan yang membuka produk 3D", W_EDITOR),
+      j("mk-ad-2", "scan", "Put a Custom Marker on a print ad", "Memasang Custom Marker di iklan cetak", "put a Custom Marker on a print ad", "memasang Custom Marker di iklan cetak", W_MARKER),
+      j("mk-ad-3", "rocket", "Add a short AR moment after the click", "Menambahkan momen AR singkat setelah klik", "add a short AR moment after the click", "menambahkan momen AR singkat setelah klik", W_SHARE),
+      elseJob()
+    ],
+    social: [
+      j("mk-so-1", "heart", "Make a shareable AR moment", "Membuat momen AR yang bisa dibagikan", "make a shareable AR moment", "membuat momen AR yang bisa dibagikan", W_SHARE),
+      j("mk-so-2", "box", "Make a 3D object people can post", "Membuat objek 3D yang bisa diposting orang", "make a 3D object people can post", "membuat objek 3D yang bisa diposting orang", W_EDITOR),
+      j("mk-so-3", "sparkles", "Turn a photo into 3D with AI-3D Generation", "Mengubah foto jadi 3D dengan AI-3D Generation", "turn a photo into 3D with AI-3D Generation", "mengubah foto jadi 3D dengan AI-3D Generation", W_AI),
+      elseJob()
+    ],
+    content: [
+      j("mk-ct-1", "book", "Make a 3D story for a post or article", "Membuat cerita 3D untuk unggahan atau artikel", "make a 3D story for a post or article", "membuat cerita 3D untuk unggahan atau artikel", W_EDITOR),
+      j("mk-ct-2", "box", "Give readers a model they can turn", "Memberi pembaca model yang bisa diputar", "give readers a model they can turn", "memberi pembaca model yang bisa diputar", W_EDITOR),
+      j("mk-ct-3", "scan", "Add an AR layer on a printed page", "Menambahkan lapisan AR di halaman cetak", "add an AR layer on a printed page", "menambahkan lapisan AR di halaman cetak", W_MARKER),
+      elseJob()
+    ],
+    brand: [
+      j("mk-br-1", "sparkles", "Make a branded experience people open in AR", "Membuat pengalaman bermerek yang dibuka orang dalam AR", "make a branded experience people open in AR", "membuat pengalaman bermerek yang dibuka orang dalam AR", W_SHARE),
+      j("mk-br-2", "scan", "Put a Custom Marker on packaging or a card", "Memasang Custom Marker di kemasan atau kartu", "put a Custom Marker on packaging or a card", "memasang Custom Marker di kemasan atau kartu", W_MARKER),
+      j("mk-br-3", "palette", "Build a 3D scene in the brand's look", "Membuat scene 3D dengan tampilan merek", "build a 3D scene in the brand's look", "membuat scene 3D dengan tampilan merek", W_EDITOR),
+      elseJob()
+    ],
+    pm: [
+      j("mk-pm-1", "rocket", "Launch a product people can turn in 3D", "Meluncurkan produk yang bisa diputar orang dalam 3D", "launch a product people can turn in 3D", "meluncurkan produk yang bisa diputar orang dalam 3D", W_EDITOR),
+      j("mk-pm-2", "scan", "Put a Custom Marker on the product", "Memasang Custom Marker di produk", "put a Custom Marker on the product", "memasang Custom Marker di produk", W_MARKER),
+      j("mk-pm-3", "box", "Show the product in someone's space with AR", "Menunjukkan produk di ruangan seseorang dengan AR", "show the product in someone's space with AR", "menunjukkan produk di ruangan seseorang dengan AR", W_EDITOR),
+      elseJob()
+    ],
+    other: [
+      j("mk-ot-1", "box", "Show the offer in 3D", "Menunjukkan penawaran dalam 3D", "show the offer in 3D", "menunjukkan penawaran dalam 3D", W_EDITOR),
+      j("mk-ot-2", "scan", "Let people open it in AR", "Membiarkan orang membukanya dalam AR", "let people open it in AR", "membiarkan orang membukanya dalam AR", W_SHARE),
+      elseJob()
+    ]
+  };
+
+  const LEVELS = [
+    ["tk", "TK", "heart"], ["sd", "SD", "backpack"], ["smp", "SMP", "school"],
+    ["sma", "SMA", "book"], ["uni", "University", "graduation"], ["slb", "SLB", "hand"]
+  ];
+  const AGE_BANDS = [["under", "Under 13", "shield"], ["over", "13 or older", "user"]];
+  const BIZ_TYPES = [
+    ["product", "Product or brand", "box"], ["retail", "Shop or retail", "layers"],
+    ["food", "Food and drink", "heart"], ["agency", "Agency or studio", "briefcase"],
+    ["maker", "Manufacturer", "layers"], ["edbiz", "Education business", "school"],
+    ["other", "Other", "plus"]
+  ];
+  const TEAM_SIZES = [
+    ["solo", "Just me", "user"], ["small", "2–10", "users"], ["mid", "11–50", "users"],
+    ["large", "51–200", "users"], ["xl", "More than 200", "users"]
+  ];
+  const DESIGN_TYPES = [
+    ["illustration", "Illustration", "pen"], ["landscape", "Landscape", "map"],
+    ["graphic", "Graphic design", "palette"], ["ui", "UI and product", "layers"],
+    ["interior", "Interior", "landmark"], ["fashion", "Fashion", "heart"],
+    ["motion", "3D and motion", "rocket"], ["other", "Other", "plus"]
+  ];
+  const MARKET_TYPES = [
+    ["digital", "Digital marketing", "globe"], ["ads", "Ads", "megaphone"],
+    ["social", "Social media", "heart"], ["content", "Content", "book"],
+    ["brand", "Brand", "sparkles"], ["pm", "Product marketing", "box"],
+    ["other", "Other", "plus"]
+  ];
+  const SUB_PHRASE = {
+    tk: ["TK", "TK"], sd: ["SD", "SD"], smp: ["SMP", "SMP"], sma: ["SMA", "SMA"],
+    uni: ["university", "universitas"], slb: ["SLB", "SLB"],
+    product: ["a product or brand", "produk atau merek"], retail: ["a shop", "toko"],
+    food: ["a food business", "bisnis makanan"], agency: ["an agency", "agensi"],
+    maker: ["a manufacturer", "pabrikan"], edbiz: ["an education business", "bisnis pendidikan"],
+    illustration: ["illustration", "ilustrasi"], landscape: ["landscape design", "desain lanskap"],
+    graphic: ["graphic design", "desain grafis"], ui: ["UI and product design", "desain UI dan produk"],
+    interior: ["interior design", "desain interior"], fashion: ["fashion design", "desain fesyen"],
+    motion: ["3D and motion", "3D dan motion"],
+    digital: ["digital marketing", "pemasaran digital"], ads: ["ads", "iklan"],
+    social: ["social media", "media sosial"], content: ["content", "konten"],
+    brand: ["brand marketing", "pemasaran merek"], pm: ["product marketing", "pemasaran produk"]
+  };
+  Object.entries(SUB_PHRASE).forEach(([key, pair]) => { if (key) remember(pair[0], pair[1]); });
+
+  const SAY_EDU = {
+    tk: "For a TK class, what would you like to make?",
+    sd: "For an SD class, what would you like to make?",
+    smp: "For an SMP class, what would you like to make?",
+    sma: "For an SMA class, what would you like to make?",
+    uni: "For a university class, what would you like to make?",
+    slb: "For an SLB class, what would you like to make?"
+  };
+  const SAY_STU_UNDER = {
+    tk: "You learn in TK and you're under 13. What would you like to make?",
+    sd: "You learn in SD and you're under 13. What would you like to make?",
+    smp: "You learn in SMP and you're under 13. What would you like to make?",
+    sma: "You learn in SMA and you're under 13. What would you like to make?",
+    uni: "You learn at university and you're under 13. What would you like to make?",
+    slb: "You learn in SLB and you're under 13. What would you like to make?"
+  };
+  const SAY_STU_OVER = {
+    tk: "You learn in TK. What would you like to make?",
+    sd: "You learn in SD. What would you like to make?",
+    smp: "You learn in SMP. What would you like to make?",
+    sma: "You learn in SMA. What would you like to make?",
+    uni: "You learn at university. What would you like to make?",
+    slb: "You learn in SLB. What would you like to make?"
+  };
+  const SAY_BIZ_SOLO = {
+    product: "You run a product or brand yourself. What would you like to make?",
+    retail: "You run a shop yourself. What would you like to make?",
+    food: "You run a food business yourself. What would you like to make?",
+    agency: "You run an agency yourself. What would you like to make?",
+    maker: "You run a manufacturer yourself. What would you like to make?",
+    edbiz: "You run an education business yourself. What would you like to make?",
+    other: "You run the business yourself. What would you like to make?"
+  };
+  const SAY_BIZ_TEAM = {
+    product: "Your team works on a product or brand. What would you like to make?",
+    retail: "Your team works in a shop. What would you like to make?",
+    food: "Your team works in a food business. What would you like to make?",
+    agency: "Your team works in an agency. What would you like to make?",
+    maker: "Your team works at a manufacturer. What would you like to make?",
+    edbiz: "Your team works in an education business. What would you like to make?",
+    other: "Your team works in the business. What would you like to make?"
+  };
+  const SAY_DESIGN = {
+    illustration: "For illustration, what would you like to make?",
+    landscape: "For landscape design, what would you like to make?",
+    graphic: "For graphic design, what would you like to make?",
+    ui: "For UI and product design, what would you like to make?",
+    interior: "For interior design, what would you like to make?",
+    fashion: "For fashion design, what would you like to make?",
+    motion: "For 3D and motion, what would you like to make?",
+    other: "For your design work, what would you like to make?"
+  };
+  const SAY_MARKET = {
+    digital: "For digital marketing, what would you like to make?",
+    ads: "For ads, what would you like to make?",
+    social: "For social media, what would you like to make?",
+    content: "For content, what would you like to make?",
+    brand: "For brand marketing, what would you like to make?",
+    pm: "For product marketing, what would you like to make?",
+    other: "For your marketing, what would you like to make?"
+  };
+
+  function motivationSay() {
+    const sub = state.subrole;
+    if (state.role === "educator") return SAY_EDU[sub] || "What would you like to make?";
+    if (state.role === "student") return (state.ageBand === "under" ? SAY_STU_UNDER : SAY_STU_OVER)[sub] || "What would you like to make?";
+    if (state.role === "business") return (state.team === "solo" ? SAY_BIZ_SOLO : SAY_BIZ_TEAM)[sub] || "What would you like to make?";
+    if (state.role === "designer") return SAY_DESIGN[sub] || "What would you like to make?";
+    if (state.role === "marketer") return SAY_MARKET[sub] || "What would you like to make?";
+    return ROLES[state.role]?.greet || "What would you like to make?";
+  }
+  function jobsFor() {
+    const role = state.role;
+    const sub = state.subrole;
+    if (role === "educator") return EDUCATOR_JOBS[sub] || EDUCATOR_JOBS.sd;
+    if (role === "student") {
+      const band = state.ageBand === "under" ? "under" : "over";
+      return STUDENT_JOBS[band][sub] || STUDENT_JOBS[band].sd;
+    }
+    if (role === "business") return (BUSINESS_JOBS[sub] || BUSINESS_JOBS.other)();
+    if (role === "designer") return DESIGNER_JOBS[sub] || DESIGNER_JOBS.other;
+    if (role === "marketer") return MARKETER_JOBS[sub] || MARKETER_JOBS.other;
+    return FLOWS[role]?.jobs || [];
+  }
+  function subPhrase() {
+    if (state.subrole === "other") return state.subDetail.trim();
+    const pair = SUB_PHRASE[state.subrole];
+    return pair ? pair[0] : "";
+  }
+  function goalKey() {
+    return [state.role, state.subrole, state.ageBand, state.team, state.subDetail].join("|");
+  }
+
+  const STUDIO_REST = {
+    educator: [
+      ["Let learners explore a model", "Place it in the Editor. They tap, turn, and open it in AR.", "teacherPresent"],
+      ["Connect 3D/AR to something real", "Use Custom Marker on a card, poster, or object.", "lecturerAr"]
+    ],
+    student: [
+      ["Create an interactive 3D game", "Use Visual Coding to make objects move, react, and score.", "studentCode"],
+      ["Create a project with your classmates", "Use Collaborate to build projects with your classmates in real time.", "studentCollab"]
+    ],
+    business: [
+      ["Put 3D/AR on a real product", "Use Custom Marker on packaging, a menu, or a card.", "creatorUsecases"],
+      ["Create a 3D object from an image", "Use AI-3D Generation to turn an image or text into 3D.", "creatorAi"]
+    ],
+    designer: [
+      ["Show the work in 3D", "Open it from the Editor, then view it in AR.", "creatorCover"],
+      ["Create a 3D object from an image", "Use AI-3D Generation to turn an image or text into 3D.", "creatorAi"]
+    ],
+    marketer: [
+      ["Make a campaign people can open", "Publish a 3D/AR moment, then share the link.", "creatorUsecases"],
+      ["Put 3D/AR on a real product", "Use Custom Marker on packaging, a menu, or a card.", "creatorCover"]
+    ]
+  };
+
   const TRY_COVERS = {
     project: {
       src: "assets/litosphere-cover.png?v=84", alt: "Human Heart, an interactive 3D project", focus: [0.27, 0.69],
@@ -835,10 +1402,10 @@
   const flagSrc = (iso) => `assets/flags/${iso.toLowerCase()}.svg`;
   const flag = (iso) => `<img class="flag" src="${flagSrc(iso)}" alt="" width="22" height="16" />`;
   const CHEERS = ["Great pick!", "Love that!", "Sounds fun!", "Nice one!", "Got it!"];
-  const BASE_STEPS = ["name", "source", "phone", "role", "goal", "subject", "try"];
-  const STUDENT_STEPS = ["name", "source", "phone", "role", "age", "goal", "subject", "try"];
+  const BASE_STEPS = ["name", "source", "phone", "role", "subrole", "goal", "try"];
+  const STUDENT_STEPS = ["name", "source", "phone", "role", "subrole", "age", "goal", "try"];
   let STEPS = BASE_STEPS;
-  const STEP_LABELS = { name: "You", source: "Source", phone: "Phone", role: "Role", age: "Age", goal: "Goal", subject: "Subject", try: "Try it" };
+  const STEP_LABELS = { name: "You", source: "Source", phone: "Phone", role: "Role", subrole: "About you", age: "Age", goal: "Goal", subject: "Subject", try: "Try it" };
   const idx = (step) => STEPS.indexOf(step);
 
   /* ---------- State ---------- */
@@ -853,6 +1420,11 @@
     phoneSkipped: false,
     consent: false,
     role: null,
+    subrole: null,
+    subDetail: "",
+    team: null,
+    ageBand: null,
+    subFor: null,
     otherRole: "",
     job: null,
     goalFor: null,
@@ -1035,14 +1607,27 @@
       say: "You can change this later.",
       pose: "present"
     }),
+    subrole: () => ({
+      title: state.role === "student" ? "Where do you learn?"
+        : state.role === "business" ? "What kind of business is it?"
+        : state.role === "designer" ? "What kind of design do you do?"
+        : state.role === "marketer" ? "What kind of marketing do you do?"
+        : "Where do you teach?",
+      say: state.role === "student" ? "This sets up examples for where you learn."
+        : state.role === "business" ? "This sets up a starting point for your business."
+        : state.role === "designer" ? "This sets up a starting point for your design work."
+        : state.role === "marketer" ? "This sets up a starting point for your marketing."
+        : "This sets up examples for your learners.",
+      pose: "think"
+    }),
     age: () => ({
       title: "A little about you",
       say: "This helps me set things up for you.",
       pose: "think"
     }),
     goal: () => ({
-      title: FLOWS[state.role].title,
-      say: ROLES[state.role].greet,
+      title: "What would you like to do?",
+      say: motivationSay(),
       pose: "tablet"
     }),
     subject: () => ({
@@ -1061,7 +1646,7 @@
     say(s.say);
   }
 
-  const SPLIT_STEPS = new Set(["source", "age", "goal", "subject"]);
+  const SPLIT_STEPS = new Set(["source", "subrole", "age", "goal", "subject"]);
   const splitQuery = window.matchMedia("(min-width: 981px)");
 
   function go(step, dir = "forward") {
@@ -1100,11 +1685,14 @@
         if (on) pane.dataset.dir = dir;
       });
       renderStory(step);
+      if (step === "subrole") renderSubrole();
+      if (step === "goal") renderGoal();
+      if (step === "age") $("pane-age").classList.toggle("is-banded", state.ageBand === "under");
       // Picking a role advances right away, so the step always opens with nothing selected
       if (step === "role") markRole(null);
       if (!duringAuth) {
         if (step === "name" && window.matchMedia("(pointer: fine)").matches) nameInput.focus({ preventScroll: true });
-        else if (step === "age" && window.matchMedia("(pointer: fine)").matches) $("ageInput").focus({ preventScroll: true });
+        else if (step === "age" && window.matchMedia("(pointer: fine)").matches && state.ageBand !== "under") $("ageInput").focus({ preventScroll: true });
         else $("title").focus({ preventScroll: true });
       }
     }
@@ -1124,6 +1712,7 @@
     source: () => sourceValid(),
     phone: () => phoneValid(),
     role: () => Boolean(state.role),
+    subrole: () => subroleValid(),
     age: () => ageValid(),
     goal: () => goalValid(),
     subject: () => state.reached > idx("subject"),
@@ -1143,7 +1732,7 @@
   buildStepper();
   // Students get an extra age step after their role
   function syncSteps() {
-    const next = state.role === "student" ? STUDENT_STEPS : BASE_STEPS;
+    const next = state.role === "student" && state.ageBand === "under" ? STUDENT_STEPS : BASE_STEPS;
     if (next === STEPS) return;
     STEPS = next;
     buildStepper();
@@ -1167,6 +1756,7 @@
     const i = STEPS.indexOf(btn.dataset.step);
     const current = STEPS.indexOf(state.step);
     if (i === current || !canVisit(i)) return;
+    if (STEPS[i] === "subrole") renderSubrole();
     if (STEPS[i] === "goal") renderGoal();
     if (STEPS[i] === "subject") renderSubject();
     if (STEPS[i] === "try") paintTry();
@@ -1611,27 +2201,28 @@
   function commitRole(role) {
     const changed = state.role !== role;
     state.role = role;
-    syncSteps();
-    applyMinorRules();
     if (changed) {
       state.job = null;
       state.goalFor = null;
+      state.subrole = null;
+      state.subDetail = "";
+      state.team = null;
+      state.ageBand = null;
+      state.subFor = null;
+      state.age = null;
+      state.joinVia = null;
       state.subject = [];
       state.grade = [];
       state.subjectFor = null;
-      state.reached = idx("role");
     }
+    syncSteps();
+    if (changed) state.reached = idx("role");
+    applyMinorRules();
     const loading = $("loading");
     $("loadingSub").textContent = ROLES[role].loading;
     loading.classList.add("show");
     setTimeout(() => {
-      if (role === "student") {
-        renderAge();
-        go("age");
-      } else {
-        renderGoal();
-        go("goal");
-      }
+      go("subrole");
       loading.classList.remove("show");
     }, changed ? 950 : 380);
   }
@@ -1746,6 +2337,175 @@
     commitRole("other");
   });
 
+  /* ---------- Step 4b: sub-role ---------- */
+  const SUBROLE_Q = {
+    educator: ["Where do you teach?", "This sets up examples for your learners."],
+    student: ["Where do you learn?", "This sets up examples for where you learn."],
+    business: ["What kind of business is it?", "This sets up a starting point for your business."],
+    designer: ["What kind of design do you do?", "This sets up a starting point for your design work."],
+    marketer: ["What kind of marketing do you do?", "This sets up a starting point for your marketing."]
+  };
+  function subroleGroups() {
+    if (state.role === "student") {
+      return [
+        { id: "level", title: "Where do you learn?", hint: "TK is kindergarten. SD is elementary, SMP junior high, and SMA senior high. SLB is special education.", items: LEVELS },
+        { id: "band", title: "How old are you?", items: AGE_BANDS }
+      ];
+    }
+    if (state.role === "business") {
+      return [
+        { id: "kind", title: "What kind of business is it?", items: BIZ_TYPES },
+        { id: "team", title: "How many people work there?", items: TEAM_SIZES }
+      ];
+    }
+    if (state.role === "designer") return [{ id: "kind", title: "What kind of design do you do?", items: DESIGN_TYPES }];
+    if (state.role === "marketer") return [{ id: "kind", title: "What kind of marketing do you do?", items: MARKET_TYPES }];
+    return [{
+      id: "level",
+      title: "Where do you teach?",
+      hint: "TK is kindergarten. SD is elementary, SMP junior high, and SMA senior high. SLB is special education.",
+      items: LEVELS
+    }];
+  }
+  function subroleValid() {
+    if (!state.subrole) return false;
+    if (state.subrole === "other" && !state.subDetail.trim()) return false;
+    if (state.role === "student" && !state.ageBand) return false;
+    if (state.role === "business" && !state.team) return false;
+    return Boolean(SUBROLE_Q[state.role] || state.role === "educator");
+  }
+  function subroleHintText() {
+    if (!state.subrole) {
+      if (state.role === "student") return "Choose where you learn to continue";
+      if (state.role === "business") return "Choose the kind of business to continue";
+      if (state.role === "designer") return "Choose the kind of design you do";
+      if (state.role === "marketer") return "Choose the kind of marketing you do";
+      return "Choose where you teach to continue";
+    }
+    if (state.subrole === "other" && !state.subDetail.trim()) return "Tell us the kind in a few words";
+    if (state.role === "student" && !state.ageBand) return "Choose your age group to continue";
+    if (state.role === "business" && !state.team) return "Choose how many people work there";
+    return "Choose one to continue";
+  }
+  function paintSubrole() {
+    const root = $("subroleScroll");
+    root.querySelectorAll(".chip").forEach((chip) => {
+      const group = chip.dataset.group;
+      const on = (group === "band" && chip.dataset.value === state.ageBand)
+        || (group === "team" && chip.dataset.value === state.team)
+        || ((group === "level" || group === "kind") && chip.dataset.value === state.subrole);
+      chip.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    $("subOtherReveal")?.classList.toggle("open", state.subrole === "other");
+    const valid = subroleValid();
+    $("subroleNext").setAttribute("aria-disabled", valid ? "false" : "true");
+    const hint = $("subroleHint");
+    hint.classList.remove("is-warn");
+    hint.innerHTML = `${icon("info")}<span>${subroleHintText()}</span>`;
+    renderStepper();
+  }
+  function pickSub(group, id, chip) {
+    if (group === "band") state.ageBand = id;
+    else if (group === "team") state.team = id;
+    else {
+      state.subrole = id;
+      if (id !== "other") state.subDetail = "";
+    }
+    state.goalFor = null;
+    state.job = null;
+    syncSteps();
+    paintSubrole();
+    burstFrom(chip, { count: 8, spread: 360, power: 0.55 });
+    hop();
+    react(pick(CHEERS));
+    if (id === "other" && group !== "band" && group !== "team") {
+      setTimeout(() => $("subOther")?.focus({ preventScroll: true }), 200);
+    }
+  }
+  function renderSubrole() {
+    if (state.subFor === state.role && $("subroleScroll").childElementCount) {
+      paintSubrole();
+      return;
+    }
+    state.subFor = state.role;
+    const root = $("subroleScroll");
+    root.innerHTML = "";
+    subroleGroups().forEach((group) => {
+      const block = document.createElement("div");
+      block.className = "q-block";
+      const title = document.createElement("h2");
+      title.className = "q";
+      title.textContent = group.title;
+      block.appendChild(title);
+      if (group.hint) {
+        const hint = document.createElement("p");
+        hint.className = "sub-hint";
+        hint.textContent = group.hint;
+        block.appendChild(hint);
+      }
+      const chips = document.createElement("div");
+      chips.className = "chips";
+      chips.setAttribute("role", "radiogroup");
+      chips.setAttribute("aria-label", group.title);
+      group.items.forEach(([id, label, ico], i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.dataset.group = group.id;
+        btn.dataset.value = id;
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", "false");
+        btn.style.setProperty("--i", i);
+        btn.innerHTML = `<span class="chip-ico">${icon(ico)}</span><span>${escapeHtml(label)}</span>`;
+        btn.addEventListener("click", () => pickSub(group.id, id, btn));
+        chips.appendChild(btn);
+      });
+      block.appendChild(chips);
+      if (group.items.some(([id]) => id === "other")) {
+        const reveal = document.createElement("div");
+        reveal.className = "reveal";
+        reveal.id = "subOtherReveal";
+        reveal.innerHTML = `<div class="reveal-inner"><label class="sr-only" for="subOther">Other</label><input class="field" id="subOther" type="text" placeholder="Tell us in a few words" autocomplete="off" /></div>`;
+        block.appendChild(reveal);
+      }
+      root.appendChild(block);
+    });
+    const other = $("subOther");
+    if (other) {
+      other.value = state.subDetail;
+      other.addEventListener("input", () => {
+        state.subDetail = other.value;
+        state.goalFor = null;
+        paintSubrole();
+      });
+    }
+    paintSubrole();
+  }
+  $("subroleBack").addEventListener("click", () => go("role", "back"));
+  $("subroleNext").addEventListener("click", () => {
+    if (!subroleValid()) {
+      restartClass($("subroleNext"), "shake");
+      $("subroleHint").classList.add("is-warn");
+      return;
+    }
+    if (state.role === "student" && state.ageBand === "under") {
+      state.age = 12;
+      if (state.joinVia === "own") state.joinVia = null;
+      applyMinorRules();
+      syncSteps();
+      renderAge();
+      go("age");
+      return;
+    }
+    if (state.role === "student") {
+      state.age = 16;
+      state.joinVia = null;
+      applyMinorRules();
+    }
+    syncSteps();
+    go("goal");
+  });
+
   /* ---------- Step 4b: age + how a student joins ---------- */
   const MINOR_AGE = 13;
   const AGE_MIN = 4;
@@ -1793,7 +2553,11 @@
 
   let agePainted = false;
   function renderAge() {
-    if (agePainted) return;
+    if (agePainted) {
+      if (state.age !== null) ageInput.value = String(state.age);
+      paintAge(state.age !== null ? "ok" : "empty");
+      return;
+    }
     agePainted = true;
     if (state.age !== null) ageInput.value = String(state.age);
     const root = $("joinOptions");
@@ -1926,15 +2690,18 @@
     renderGoal();
     go("goal");
   });
-  $("ageBack").addEventListener("click", () => go("role", "back"));
+  $("ageBack").addEventListener("click", () => go("subrole", "back"));
 
   /* ---------- Step 2: goal ---------- */
   function renderGoal() {
-    if (state.goalFor === state.role) return;
-    state.goalFor = state.role;
+    const key = goalKey();
+    if (state.goalFor === key) return;
+    state.goalFor = key;
+    state.job = null;
     const root = $("goalOptions");
     root.innerHTML = "";
-    FLOWS[state.role].jobs.forEach((job, i) => {
+    const jobs = jobsFor();
+    jobs.forEach((job, i) => {
       const wrap = document.createElement("div");
       wrap.className = "opt-wrap";
       wrap.style.setProperty("--i", i);
@@ -2066,10 +2833,10 @@
       goalHint.classList.add("is-warn");
       return;
     }
-    renderSubject();
-    go("subject");
+    paintTry();
+    go("try");
   });
-  $("goalBack").addEventListener("click", () => go(state.role === "student" ? "age" : "role", "back"));
+  $("goalBack").addEventListener("click", () => go(state.role === "student" && state.ageBand === "under" ? "age" : "subrole", "back"));
 
   /* ---------- Step 3: subject + grade ---------- */
   function makeChip(label, iconName, group, extraClass = "") {
@@ -2176,14 +2943,10 @@
     const id = uiLang === "id";
     const raw = goal === "other" ? tr(detailValue()) : "";
     const extra = /^[A-Z][a-z]/.test(raw) ? raw.charAt(0).toLowerCase() + raw.slice(1) : raw;
-    const aim = extra || tr(WANTS[goal] || "try Assemblr for what you need");
-    const subject = chipValue("subject");
-    const grade = chipValue("grade");
-    const multi = grade && subject && /&/.test(grade + subject);
-    const focus = id
-      ? (multi ? `${subject} untuk ${grade}` : [subject, grade].filter(Boolean).join(" "))
-      : (multi ? `${subject} for ${grade}` : [grade, subject].filter(Boolean).join(" "));
-    const focusPart = focus ? ` ${id ? "di" : "in"} ${token(focus, "subject")}` : "";
+    const aim = extra || tr(state.job?.want || WANTS[goal] || "try Assemblr Studio for what you need");
+    const place = subPhrase();
+    const prep = state.role === "educator" || state.role === "student" ? (id ? "di" : "in") : (id ? "untuk" : "for");
+    const focusPart = place ? ` ${prep} ${token(tr(place), "subrole")}` : "";
     const typedRole = (state.otherRole || "").trim();
     const bareRole = typedRole.replace(/^(a|an)\s+/i, "");
     const customRole = bareRole
@@ -2230,6 +2993,7 @@
     $("tryFit").querySelectorAll(".token").forEach((t) => {
       t.addEventListener("click", () => {
         const step = t.dataset.step;
+        if (step === "subrole") renderSubrole();
         if (step === "subject") renderSubject();
         go(step, "back");
       });
@@ -2581,6 +3345,16 @@
   let welcomeDone = false;
 
   function slidesForWelcome() {
+    if (state.job && STUDIO_REST[state.role]) {
+      const art = state.role === "student" ? "studentCreate" : state.role === "educator" ? "teacherSlides" : "creatorCover";
+      const open = [state.job.welcomeTitle || state.job.label, state.job.welcome || "Build it in the Editor, then view it in AR.", art];
+      const rest = STUDIO_REST[state.role].map((slide) =>
+        state.role === "student" && (state.ageBand === "under" || state.subrole === "tk" || state.subrole === "sd") && slide[2] === "studentCollab"
+          ? [slide[0], slide[1], "studentCollabKids"]
+          : slide
+      );
+      return [open, ...rest];
+    }
     const role = WELCOME_REST[state.role] ? state.role : "other";
     const goal = state.job?.id || "other";
     const open = WELCOME_OPEN[`${role}:${goal}`] || WELCOME_OPEN[`${role}:other`];

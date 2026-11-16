@@ -41,6 +41,10 @@
       consent: s.consent,
       role: s.role,
       otherRole: s.otherRole,
+      subrole: s.subrole,
+      subDetail: s.subDetail,
+      team: s.team,
+      ageBand: s.ageBand,
       age: s.age,
       joinVia: s.joinVia,
       guardianEmail: s.guardianEmail || $("guardianEmail")?.value || "",
@@ -81,6 +85,15 @@
       document.querySelector(`.tile[data-role="${a.role}"]`)?.click();
       await wait(250);
       if (step() === "role") $("roleNext").click();
+    },
+    async subrole(a) {
+      const level = document.querySelector(`#pane-subrole [data-group="level"][data-value="${a.subrole}"], #pane-subrole [data-group="kind"][data-value="${a.subrole}"]`);
+      level?.click();
+      if (a.ageBand) document.querySelector(`#pane-subrole [data-group="band"][data-value="${a.ageBand}"]`)?.click();
+      if (a.team) document.querySelector(`#pane-subrole [data-group="team"][data-value="${a.team}"]`)?.click();
+      fill($("subOther"), a.subDetail);
+      await wait(150);
+      $("subroleNext").click();
     },
     async age(a) {
       fill($("ageInput"), a.age == null ? "" : String(a.age));
