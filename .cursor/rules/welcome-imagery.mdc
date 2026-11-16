@@ -1,0 +1,18 @@
+---
+description: Rules for welcoming page photos (assets/welcome-*.jpg) per role
+globs: assets/welcome-*,app.js
+alwaysApply: false
+---
+
+# Welcoming page photos
+
+- Student role: every student model must look like a 6–9 year old child (early elementary),
+  never teens or pre-teens. Applies to welcome-student-create, welcome-student-code,
+  welcome-student-collab, and welcome-student-collab-kids.
+- Each role shows its own models: educator = teacher, parent = parent with their child,
+  university = university students, lecturer = lecturer with university students.
+- Lighting: bright, neutral daylight with rich contrast and natural skin tones. No warm or
+  brown cast, but never washed out or over-bright.
+- Smartboards, whiteboards, and projector screens stay fully inside the frame with headroom
+  above them.
+- Images are 1280×720 JPEGs. Bump the `?v=` query in `WELCOME_ART` when one changes.

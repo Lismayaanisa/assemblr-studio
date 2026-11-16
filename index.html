@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in · Assemblr Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/assemblr-studio-mark.png" />
+  <link rel="stylesheet" href="styles.css?v=213" />
+</head>
+<body data-phase="auth">
+  <div class="backdrop" aria-hidden="true">
+    <canvas class="wave" id="waveBg"></canvas>
+  </div>
+
+  <header class="topbar">
+    <div class="logo-wordmark" aria-label="Assemblr Studio"><img class="logo-mark" src="assets/assemblr-studio-mark.png" alt="" width="26" height="26" />ASSEMBLR<span class="sep">/</span>STUDIO</div>
+
+    <div class="lang" id="lang">
+      <button class="lang-btn" type="button" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Country and language: United States, English">
+        <img class="flag" id="langFlag" src="assets/flags/us.svg" alt="" width="22" height="16" />
+        <span id="langLabel">English</span>
+        <span class="chev" data-icon="chevron"></span>
+      </button>
+      <div class="lang-menu" role="listbox" aria-label="Country and language">
+        <button type="button" role="option" data-lang="English" data-flag="us" data-country="United States" aria-checked="true"><img class="flag" src="assets/flags/us.svg" alt="" width="22" height="16" /><span class="lang-text"><span>English</span><small>United States</small></span><span data-icon="check"></span></button>
+        <button type="button" role="option" data-lang="Bahasa Indonesia" data-flag="id" data-country="Indonesia" aria-checked="false"><img class="flag" src="assets/flags/id.svg" alt="" width="22" height="16" /><span class="lang-text"><span>Bahasa Indonesia</span><small>Indonesia</small></span><span data-icon="check"></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="card auth" id="auth" aria-labelledby="authHeadline">
+      <aside class="story">
+        <div class="story-copy" id="authCopy">
+          <img class="auth-mark" src="assets/assemblr-studio-mark.png" alt="" width="56" height="56" />
+          <h1 id="authHeadline" tabindex="-1"></h1>
+          <p class="auth-lead" id="authLead"></p>
+        </div>
+      </aside>
+
+      <div class="panel">
+        <div class="pane active" id="authHome" data-auth="home">
+          <div class="auth-tabs" role="tablist" id="authTabs" aria-label="Log in or register">
+            <button type="button" role="tab" id="tabLogin" aria-selected="true">Login</button>
+            <button type="button" role="tab" id="tabRegister" aria-selected="false">Register</button>
+          </div>
+
+          <div class="social-row">
+            <button class="social-btn" type="button" id="belajarBtn">
+              <span class="new-badge">New</span>
+              <img src="assets/logo-belajar-id.png" alt="" width="22" height="22" />
+              <span class="social-copy"><span class="social-kicker" data-sso>Sign in</span><span class="social-name">Belajar.id</span></span>
+            </button>
+            <button class="social-btn" type="button" id="googleBtn">
+              <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              <span class="social-copy"><span class="social-kicker" data-sso>Sign in</span><span class="social-name">Google</span></span>
+            </button>
+            <button class="social-btn" type="button" id="facebookBtn">
+              <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span class="social-copy"><span class="social-kicker" data-sso>Sign in</span><span class="social-name">Facebook</span></span>
+            </button>
+            <button class="social-btn" type="button" id="appleBtn">
+              <svg class="brand-ico apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              <span class="social-copy"><span class="social-kicker" data-sso>Sign in</span><span class="social-name">Apple</span></span>
+            </button>
+            <button class="social-btn" type="button" id="emailBtn">
+              <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="social-copy"><span class="social-kicker" data-sso>Sign in</span><span class="social-name">Email</span></span>
+            </button>
+            <button class="social-btn" type="button" id="codeBtn">
+              <svg class="brand-ico key" viewBox="0 0 24 24" aria-hidden="true"><circle cx="7.5" cy="15.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m21 2-9.6 9.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m15.5 7.5 3 3L22 7l-3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              <span class="social-copy"><span class="social-kicker" id="codeKicker">Join</span><span class="social-name" id="codeName">by Code</span></span>
+            </button>
+          </div>
+          <div class="social-hint" id="socialHint" aria-hidden="true"><span id="socialThumb"></span></div>
+
+          <p class="or" id="orLabel"></p>
+
+          <div class="stack">
+            <label class="lbl" id="idLabel" for="loginId"></label>
+            <input class="field" id="loginId" type="text" autocomplete="username" />
+            <label class="lbl" id="pwLabel" for="loginPw"></label>
+            <input class="field" id="loginPw" type="password" autocomplete="current-password" />
+            <button class="text-link forgot-link" type="button" id="resetLink" hidden></button>
+            <p class="field-help" id="authNote" aria-live="polite"></p>
+          </div>
+
+          <button class="btn btn-primary btn-block" type="button" id="primaryAuth"></button>
+          <p class="switch-line" id="switchLine"></p>
+          <p class="legal" id="legal"></p>
+        </div>
+
+        <div class="pane" id="authEmail" data-auth="email">
+          <button class="back-btn" type="button" id="emailBack" data-icon="arrowLeft"></button>
+          <div class="code-head">
+            <h2 id="emailTitle">Register with email</h2>
+          </div>
+          <div class="stack">
+            <label class="lbl" id="regNameLabel" for="regName">Full name</label>
+            <input class="field" id="regName" type="text" autocomplete="name" placeholder="Enter your full name" />
+            <label class="lbl" id="regMailLabel" for="regMail">Email</label>
+            <input class="field" id="regMail" type="email" inputmode="email" autocomplete="email" placeholder="oliver@school.id" />
+            <label class="lbl" id="regUserLabel" for="regUser">Username</label>
+            <input class="field" id="regUser" type="text" autocomplete="username" placeholder="oliverbonnet" />
+            <div class="pw-row">
+              <div>
+                <label class="lbl" id="regPwLabel" for="regPw">Password</label>
+                <input class="field" id="regPw" type="password" autocomplete="new-password" placeholder="••••••" />
+              </div>
+              <div>
+                <label class="lbl" id="regPw2Label" for="regPw2">Confirm password</label>
+                <input class="field" id="regPw2" type="password" autocomplete="new-password" placeholder="••••••" />
+              </div>
+            </div>
+            <div class="auth-checks">
+              <label class="same-email auth-check">
+                <input type="checkbox" id="regNews" />
+                <span class="same-box" aria-hidden="true"><span data-icon="check"></span></span>
+                <span id="regNewsText">Subscribe to Assemblr email newsletter</span>
+              </label>
+              <label class="same-email auth-check">
+                <input type="checkbox" id="regTerms" />
+                <span class="same-box" aria-hidden="true"><span data-icon="check"></span></span>
+                <span id="regTermsText">I agree with terms and conditions</span>
+              </label>
+            </div>
+            <p class="field-help" id="emailNote" aria-live="polite"></p>
+          </div>
+          <button class="btn btn-primary btn-block" type="button" id="emailSubmit" aria-disabled="true">SIGN UP</button>
+        </div>
+
+        <div class="pane" id="authCode" data-auth="code">
+          <button class="back-btn" type="button" id="codeBack" data-icon="arrowLeft"></button>
+          <div class="code-head">
+            <span class="code-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+            <h2 id="codeTitle"></h2>
+            <p id="codeLead"></p>
+          </div>
+          <input class="field code-input" id="codeInput" type="text" autocomplete="off" spellcheck="false" />
+          <p class="field-help is-warn" id="codeError" aria-live="polite"></p>
+          <button class="btn btn-primary btn-block" type="button" id="codeContinue"></button>
+          <p class="demo-hint" id="codeDemo"></p>
+        </div>
+
+        <div class="pane" id="authPreview" data-auth="preview">
+          <button class="back-btn" type="button" id="previewBack" data-icon="arrowLeft"></button>
+          <div class="code-head">
+            <h2 id="previewTitle"></h2>
+            <p id="previewLead"></p>
+          </div>
+          <div class="join-card">
+            <span class="join-av" id="joinAv" aria-hidden="true"></span>
+            <div>
+              <p class="join-title" id="joinTitle"></p>
+              <p class="join-meta" id="joinMeta"></p>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block" type="button" id="previewContinue"></button>
+          <button class="text-link center" type="button" id="differentCode"></button>
+        </div>
+
+        <div class="pane" id="authJoin" data-auth="join">
+          <button class="back-btn" type="button" id="joinBack" data-icon="arrowLeft"></button>
+          <div class="auth-tabs" role="tablist" id="joinTabs">
+            <button type="button" role="tab" id="joinTabLogin" aria-selected="true"></button>
+            <button type="button" role="tab" id="joinTabRegister" aria-selected="false"></button>
+          </div>
+          <div class="code-head">
+            <h2 id="joinTitle2"></h2>
+            <p id="joinLead"></p>
+          </div>
+          <div class="stack">
+            <label class="lbl" id="nameLabel" for="joinName" hidden></label>
+            <input class="field" id="joinName" type="text" autocomplete="name" hidden />
+            <label class="lbl" id="userLabel" for="joinUser"></label>
+            <input class="field" id="joinUser" type="text" autocomplete="username" />
+            <label class="lbl" id="joinPwLabel" for="joinPw"></label>
+            <input class="field" id="joinPw" type="password" autocomplete="new-password" />
+            <button class="text-link forgot-link" type="button" id="forgotLink" hidden></button>
+            <p class="field-help is-warn" id="joinError" aria-live="polite"></p>
+          </div>
+          <button class="btn btn-primary btn-block" type="button" id="joinSubmit"></button>
+          <p class="switch-line" id="joinSwitch"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card setup solo" id="setup" aria-labelledby="title" hidden>
+      <aside class="story">
+        <div class="story-copy" id="storyCopy">
+          <h1 id="title" tabindex="-1" aria-describedby="react"></h1>
+          <div class="name-line" id="nameLine">
+            <label class="sr-only" for="nameInput">Your name</label>
+            <input id="nameInput" type="text" placeholder="Type your name" autocomplete="given-name" maxlength="40" spellcheck="false" />
+            <span class="name-ok" data-icon="check"></span>
+          </div>
+        </div>
+        <!-- blr slot "story": 160×160 art, sits on the stage floor; the bubble is blr talking -->
+        <div class="blr-stage">
+          <p class="blr-react" id="react"></p>
+          <div class="blr-slot" data-blr-slot="story" id="blrStory" data-pose="wave">
+            <span class="blr-fig"><span class="blr-pose">
+              <img class="blr-base" src="assets/blr2/wave.png" alt="" width="360" height="360" />
+              <img class="blr-blink" src="assets/blr2/wave-blink.png" alt="" width="360" height="360" />
+            </span></span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="panel">
+        <!-- Step 1: name + profile picture -->
+        <div class="pane" id="pane-name" data-pane="name">
+          <div class="scroll">
+            <div class="look">
+              <!-- Profile preview: mirrors the typed name and the equipped avatar -->
+              <div class="player" aria-hidden="true">
+                <div class="player-av" id="playerAv"><img id="playerImg" src="assets/avatars/blr-1.png?v=2" alt="" /></div>
+                <p class="player-name is-empty" id="playerName">Your name</p>
+              </div>
+              <div class="look-pick">
+                <p class="look-label" id="avatarLabel">Pick your look</p>
+                <div class="avatars" id="avatars" role="radiogroup" aria-labelledby="avatarLabel"></div>
+              </div>
+            </div>
+            <input type="file" id="avatarFile" accept="image/*" hidden />
+          </div>
+          <div class="actions">
+            <p class="action-hint" id="nameHint"></p>
+            <button class="btn btn-primary" type="button" id="nameNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 2: where they heard about us -->
+        <div class="pane" id="pane-source" data-pane="source">
+          <div class="scroll">
+            <div class="sources" id="sources" role="radiogroup" aria-labelledby="title"></div>
+          </div>
+          <div class="actions">
+            <p class="action-hint" id="sourceHint"></p>
+            <button class="btn btn-ghost" type="button" id="sourceBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="sourceNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 3: phone + promo consent -->
+        <div class="pane" id="pane-phone" data-pane="phone">
+          <div class="scroll">
+            <label class="sr-only" for="phoneInput">Phone number</label>
+            <div class="phone-field" id="phoneField">
+              <div class="cc" id="cc">
+                <button class="cc-btn" type="button" id="ccBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Country code">
+                  <img class="flag" id="ccFlag" src="assets/flags/id.svg" alt="" width="22" height="16" />
+                  <span class="cc-code" id="ccCode"></span>
+                  <span class="chev" data-icon="chevron"></span>
+                </button>
+                <div class="cc-menu" id="ccMenu">
+                  <div class="cc-search"><span data-icon="search"></span><input id="ccSearch" type="text" placeholder="Search country" aria-label="Search country" autocomplete="off" /></div>
+                  <div class="cc-list" id="ccList" role="listbox" aria-label="Country code"></div>
+                </div>
+              </div>
+              <input id="phoneInput" type="tel" inputmode="numeric" placeholder="812 3456 7890" autocomplete="tel-national" />
+              <span class="phone-ok" id="phoneOk" data-icon="check"></span>
+            </div>
+            <p class="field-help" id="phoneHelp" aria-live="polite"></p>
+
+            <div class="consent" id="consent">
+              <label class="consent-check">
+                <input type="checkbox" id="consentBox" />
+                <span class="consent-box" aria-hidden="true"><span data-icon="check"></span></span>
+                <span class="consent-title" id="consentTitle">Be the first to hear about new features, upcoming workshops, and occasional offers on WhatsApp.</span>
+              </label>
+              <p class="consent-minor"><span data-icon="shield"></span><span>You're under 13, so marketing stays off. We'll only message you about your account.</span></p>
+            </div>
+          </div>
+          <div class="actions">
+            <p class="action-hint" id="phoneHint"></p>
+            <button class="btn btn-ghost" type="button" id="phoneBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="phoneNext" aria-disabled="true"><span class="btn-text">Next</span><span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 4: role -->
+        <div class="pane" id="pane-role" data-pane="role">
+          <div class="role-area" role="radiogroup" aria-labelledby="title" id="roleGroup">
+            <div class="tiles">
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="student">
+                <span class="tile-icon"><span data-icon="backpack"></span></span>
+                <span class="tile-label">Student</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="educator">
+                <span class="tile-icon"><span data-icon="presentation"></span></span>
+                <span class="tile-label">Educator</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="parent">
+                <span class="tile-icon"><span data-icon="heart"></span></span>
+                <span class="tile-label">Parent</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="university">
+                <span class="tile-icon"><span data-icon="graduation"></span></span>
+                <span class="tile-label">University student</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+              <button class="tile" type="button" role="radio" aria-checked="false" data-role="lecturer">
+                <span class="tile-icon"><span data-icon="landmark"></span></span>
+                <span class="tile-label">Lecturer</span>
+                <span class="tick" data-icon="check"></span>
+              </button>
+            </div>
+            <div class="other-wrap" data-role="other" id="otherWrap">
+              <button class="other-row" type="button" role="radio" aria-checked="false" data-role="other">
+                <span class="other-icon" data-icon="sparkles"></span>
+                <span class="other-text"><span class="other-title">Other</span><span class="other-sub">Tell us more!</span></span>
+                <span class="radio-dot" data-icon="check"></span>
+              </button>
+              <div class="reveal" id="otherReveal">
+                <div class="reveal-inner">
+                  <form class="other-form" id="otherForm">
+                    <label class="sr-only" for="otherInput">Your role</label>
+                    <input id="otherInput" type="text" placeholder="For example, librarian or principal" autocomplete="off" />
+                    <button class="btn btn-primary btn-sm" type="submit" id="otherGo" aria-disabled="true">Continue<span data-icon="arrowRight"></span></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="actions role-actions">
+            <p class="action-hint" id="roleHint"></p>
+            <button class="btn btn-ghost" type="button" id="roleBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="roleNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 4b: age and how a student joins (students only) -->
+        <div class="pane" id="pane-age" data-pane="age">
+          <div class="scroll" id="ageScroll">
+            <div class="q-block">
+              <h2 class="q" id="ageQ">How old are you?</h2>
+              <div class="age-card" id="ageCard">
+                <div class="age-field" id="ageField">
+                  <label class="sr-only" for="ageInput">Your age in years</label>
+                  <input id="ageInput" type="text" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="10" />
+                  <span class="age-unit">years old</span>
+                </div>
+                <div class="reveal" id="minorReveal">
+              <div class="reveal-inner">
+                <div class="kid-safe" id="kidSafe">
+                  <div class="kid-safe-head"><span class="kid-safe-badge" data-icon="shield"></span><p class="kid-safe-title">Because you're under 13</p></div>
+                  <ul class="kid-safe-list">
+                    <li><span data-icon="lock"></span><span><b>Your projects are private.</b> Only you, your parent or guardian, and your teacher can see them.</span></li>
+                    <li><span data-icon="bellOff"></span><span><b>No ads.</b> You won't see ads or receive promotional messages.</span></li>
+                  </ul>
+                </div>
+              </div>
+              </div>
+            </div>
+            </div>
+            <div class="reveal" id="joinReveal">
+              <div class="reveal-inner">
+                <div class="q-block">
+                  <h2 class="q" id="joinQ">How are you joining Assemblr Studio?</h2>
+                  <div class="options" id="joinOptions" role="radiogroup" aria-labelledby="joinQ"></div>
+                </div>
+              </div>
+            </div>
+            <div class="reveal" id="guardianReveal">
+              <div class="reveal-inner">
+                <div class="q-block">
+                  <p class="q" id="guardianQ">Parent or guardian's email</p>
+                  <label class="same-email" id="sameEmail">
+                    <input type="checkbox" id="sameEmailBox" />
+                    <span class="same-box" aria-hidden="true"><span data-icon="check"></span></span>
+                    <span>My parent's email is the same as the one I signed up with</span>
+                  </label>
+                  <div class="guardian-field" id="guardianField">
+                    <span class="guardian-ico" data-icon="mail"></span>
+                    <input class="field" id="guardianEmail" type="email" inputmode="email" placeholder="parent@email.com" autocomplete="email" aria-labelledby="guardianQ" />
+                  </div>
+                  <p class="field-help" id="guardianHelp" aria-live="polite"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <p class="action-hint" id="ageHint"></p>
+            <button class="btn btn-ghost" type="button" id="ageBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="ageNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 5: goal -->
+        <div class="pane" id="pane-goal" data-pane="goal">
+          <div class="scroll" id="goalScroll">
+            <div class="options" id="goalOptions" role="radiogroup" aria-labelledby="title"></div>
+          </div>
+          <div class="actions">
+            <p class="action-hint" id="goalHint"></p>
+            <button class="btn btn-ghost" type="button" id="goalBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="goalNext" aria-disabled="true">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <!-- Step 6: subject and grade -->
+        <div class="pane" id="pane-subject" data-pane="subject">
+          <div class="scroll">
+            <div class="q-block">
+              <h2 class="q" id="subjectQ">Pick a subject <span class="q-max">Up to 2</span></h2>
+              <div class="chips" id="subjectChips" role="group" aria-labelledby="subjectQ"></div>
+              <div class="reveal" id="subjectOtherReveal">
+                <div class="reveal-inner">
+                  <label class="sr-only" for="subjectOther">Other subject</label>
+                  <input class="field" id="subjectOther" type="text" placeholder="Which subject?" autocomplete="off" />
+                </div>
+              </div>
+            </div>
+            <div class="q-block">
+              <h2 class="q" id="gradeQ">What grade(s) do you teach?</h2>
+              <div id="gradeGroups" role="group" aria-labelledby="gradeQ"></div>
+              <div class="reveal" id="gradeOtherReveal">
+                <div class="reveal-inner">
+                  <label class="sr-only" for="gradeOther">Other grade</label>
+                  <input class="field" id="gradeOther" type="text" placeholder="Which grade or level?" autocomplete="off" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" type="button" id="subjectBack"><span data-icon="arrowLeft"></span>Back</button>
+            <button class="btn btn-primary" type="button" id="subjectNext">Next<span data-icon="arrowRight"></span></button>
+          </div>
+        </div>
+
+        <div class="loading" id="loading" role="status" aria-live="polite">
+          <!-- blr slot "loading": 120×120 art -->
+          <div class="blr-slot loading-blr" data-blr-slot="loading" data-pose="laptop"><span class="blr-pose"><img class="blr-base" src="assets/blr2/laptop.png" alt="" width="360" height="360" /><img class="blr-blink" src="assets/blr2/laptop-blink.png" alt="" width="360" height="360" /></span></div>
+          <div class="blocks" aria-hidden="true"><i></i><i></i><i></i></div>
+          <p class="loading-title">Setting up your space</p>
+          <p class="loading-sub" id="loadingSub">Picking ideas for you</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 7: try it -->
+    <section class="card try is-locked" id="try" aria-labelledby="tryTitle" hidden>
+      <canvas class="try-ink" id="tryInk" aria-hidden="true"></canvas>
+      <div class="try-head">
+        <p class="try-fit" id="tryFit" data-no-tr></p>
+        <h1 id="tryTitle" tabindex="-1">Explore these interactive materials</h1>
+      </div>
+
+      <div class="preview" id="preview">
+        <div class="preview-media is-loaded" id="previewMedia">
+          <img class="preview-cover" src="assets/litosphere-cover.png?v=84" alt="Litosphere, a 3D model of Earth's layers" width="1024" height="498" />
+          <iframe class="preview-embed" id="previewEmbed" title="Interactive 3D project: the human heart" allow="camera; microphone; gyroscope; accelerometer; magnetometer; xr-spatial-tracking; fullscreen" allowfullscreen hidden></iframe>
+          <div class="gesture-hint" id="gestureHint" aria-hidden="true">
+            <svg class="gesture-hint-track" viewBox="0 0 52 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h46"/><path d="m8 4-5 4 5 4"/><path d="m44 4 5 4-5 4"/></svg>
+            <span class="gesture-hint-hand" data-icon="pointer"></span>
+          </div>
+          <button class="preview-fs" type="button" id="previewFullscreen" aria-pressed="false"><span data-icon="expand" id="previewFsIcon"></span><span id="previewFsLabel">See in full screen</span></button>
+        </div>
+        <!-- blr slot "preview": 160×106 art, peeks over the top-right edge of the preview -->
+        <div class="blr-slot blr-peek" data-blr-slot="preview" id="blrPeek"><img src="assets/blr2/present.png" alt="" width="360" height="360" /><img class="blr-blink" src="assets/blr2/present-blink.png" alt="" width="360" height="360" /></div>
+      </div>
+
+      <div class="try-foot">
+        <p class="try-gate" id="tryGate" role="alert" hidden>
+          <span data-icon="alert" id="tryGateIcon"></span>
+          <span id="tryGateText">See it in full screen first</span>
+        </p>
+        <div class="try-actions">
+          <button class="btn btn-ghost" type="button" id="tryBack"><span data-icon="pencil"></span>Edit answers</button>
+          <button class="btn btn-primary" type="button" id="startBtn" aria-disabled="true" aria-describedby="tryGate">Finish<span data-icon="arrowRight"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="welcome" id="welcome" aria-roledescription="carousel" aria-labelledby="welcomeTitle" hidden>
+      <div class="sky" id="sky" aria-hidden="true">
+        <div class="sky-photo"></div>
+        <div class="sky-glow"></div>
+        <div class="layer layer-far">
+          <span class="wisp w1"><img src="assets/world/soft-cloud-b.png?v=2" alt="" /></span>
+          <span class="wisp w2"><img src="assets/world/soft-cloud-a.png?v=2" alt="" /></span>
+          <span class="wisp w3"><img src="assets/world/soft-cloud-b.png?v=2" alt="" /></span>
+        </div>
+        <div class="layer layer-mid">
+          <span class="bubble bb1"><span class="bubble-float"><span class="bubble-orb"></span></span></span>
+          <span class="bubble bb4"><span class="bubble-float"><span class="bubble-orb"></span></span></span>
+          <span class="bubble bb7"><span class="bubble-float"><span class="bubble-orb"></span></span></span>
+          <div class="balloon-flight bf1"><img class="balloon" src="assets/world/balloon.png" alt="" /></div>
+          <div class="kite-rig" id="kite">
+            <svg class="kite-lines" aria-hidden="true"><path id="kiteString" /><path id="kiteTail" /><g id="kiteBows"></g></svg>
+            <img class="kite" id="kiteImg" src="assets/world/kite-body.png" alt="" />
+          </div>
+          <svg class="plane-trail" aria-hidden="true"><path id="planePath" /><path id="planeHead" /></svg>
+          <img class="plane" id="plane" src="assets/world/plane.png?v=2" alt="" />
+          <div class="bird-flight"><div class="bird-bob"><div class="bird">
+            <img class="bird-wing is-back" src="assets/world/bird-wing.png" alt="" />
+            <img class="bird-body" src="assets/world/bird-body.png" alt="" />
+            <span class="bird-lid"></span>
+            <img class="bird-wing is-front" src="assets/world/bird-wing.png" alt="" />
+          </div></div></div>
+        </div>
+        <div class="layer layer-near">
+          <span class="wisp w4"><img src="assets/world/soft-cloud-a.png?v=2" alt="" /></span>
+          <span class="wisp w5"><img src="assets/world/soft-cloud-c.png?v=2" alt="" /></span>
+          <div class="sky-haze"></div>
+        </div>
+      </div>
+      <div class="welcome-view" id="welcomeView">
+        <h2 id="welcomeTitle" tabindex="-1"></h2>
+        <p id="welcomeBody"></p>
+        <img class="welcome-art" id="welcomeArt" alt="" />
+      </div>
+      <div class="welcome-dots" id="welcomeDots" role="tablist" aria-label="Slides"></div>
+      <button class="btn btn-primary welcome-cta" type="button" id="welcomeCta" hidden>Let's start Assemblr Studio<span data-icon="arrowRight"></span></button>
+    </section>
+
+    <div class="preview-stage" id="previewStage" hidden>
+      <iframe id="previewFrame" title="Interactive 3D project" allow="camera; microphone; gyroscope; accelerometer; magnetometer; xr-spatial-tracking; fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen hidden></iframe>
+      <img class="preview-still" id="previewStill" alt="" hidden />
+      <button class="preview-exit" type="button" id="previewExit"><span data-icon="x"></span>Close</button>
+    </div>
+
+    <nav class="progress" id="progress" aria-label="Setup progress" hidden>
+      <ol class="stepper" id="stepper"></ol>
+    </nav>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <!-- blr slot "toast": 32×32 avatar -->
+    <span class="toast-blr" data-blr-slot="toast"><img src="assets/blr2/present.png" alt="" width="360" height="360" /></span>
+    <span id="toastText"></span>
+  </div>
+  <div class="fx" id="fx" aria-hidden="true"></div>
+  <div class="cloud-sweep" id="cloudSweep" aria-hidden="true" hidden></div>
+  <p class="sr-only" id="announcer" aria-live="polite"></p>
+
+  <script src="wave-bg.js?v=90"></script>
+  <script src="app.js?v=253"></script>
+  <script src="live-reload.js"></script>
+  <script src="auth.js?v=84"></script>
+</body>
+</html>
